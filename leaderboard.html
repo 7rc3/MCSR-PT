@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard — MCSR Portugal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            pixel: ['"Press Start 2P"', 'monospace'],
+            mono:  ['"Share Tech Mono"', 'monospace'],
+          },
+          colors: {
+            g: { 400: '#5bdb3e', 600: '#2e7d22', 800: '#1a3d10', 900: '#0d1f0b' },
+            pt: { red: '#d9000d', green: '#006600' },
+          },
+          keyframes: {
+            flicker: { '0%,100%': {opacity:'1'}, '50%': {opacity:'0.82'} },
+            glow:    { '0%,100%': {boxShadow:'0 0 6px rgba(91,219,62,0.4)'}, '50%': {boxShadow:'0 0 22px rgba(91,219,62,0.85)'} },
+            marquee: { '0%': {transform:'translateX(0)'}, '100%': {transform:'translateX(-50%)'} },
+            fadeUp:  { '0%': {opacity:'0',transform:'translateY(16px)'}, '100%': {opacity:'1',transform:'translateY(0)'} },
+            shimmer: { '0%': {backgroundPosition:'-600px 0'}, '100%': {backgroundPosition:'600px 0'} },
+          },
+          animation: {
+            flicker: 'flicker 3s ease-in-out infinite',
+            glow:    'glow 2.2s ease-in-out infinite',
+            marquee: 'marquee 28s linear infinite',
+            'fu-1':  'fadeUp 0.5s ease both 0.05s',
+            'fu-2':  'fadeUp 0.5s ease both 0.2s',
+            shimmer: 'shimmer 1.6s linear infinite',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body::before {
+      content:''; pointer-events:none; position:fixed; inset:0; z-index:9999;
+      background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);
+    }
+    .pixel-bg {
+      background-color:#080e06;
+      background-image:linear-gradient(rgba(46,125,34,0.06) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(46,125,34,0.06) 1px,transparent 1px);
+      background-size:32px 32px;
+    }
+    .pt-stripe { position:relative; }
+    .pt-stripe::before {
+      content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+      background:linear-gradient(to bottom,#006600 50%,#d9000d 50%);
+    }
+    html { scroll-behavior:smooth; }
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:#080e06; }
+    ::-webkit-scrollbar-thumb { background:#2e7d22; }
+    ::-webkit-scrollbar-thumb:hover { background:#5bdb3e; }
+    .skeleton {
+      background:linear-gradient(90deg,#1a3d10 25%,#2a5a1a 50%,#1a3d10 75%);
+      background-size:600px 100%;
+      animation:shimmer 1.6s linear infinite;
+    }
+    .lb-row { transition:background 0.15s,box-shadow 0.15s; }
+    .lb-row:hover { background:rgba(91,219,62,0.05); box-shadow:inset 3px 0 0 #5bdb3e; }
+    .rank-1 { color:#FFD700; text-shadow:0 0 8px rgba(255,215,0,0.6); }
+    .rank-2 { color:#C0C0C0; text-shadow:0 0 6px rgba(192,192,192,0.4); }
+    .rank-3 { color:#CD7F32; text-shadow:0 0 6px rgba(205,127,50,0.4); }
+    .sort-btn { transition:color 0.15s,border-color 0.15s; cursor:pointer; user-select:none; }
+    .sort-btn:hover { color:#5bdb3e; border-color:#2e7d22; }
+    .sort-btn.active { color:#5bdb3e; border-color:#5bdb3e; }
+  </style>
+</head>
+<body class="pixel-bg min-h-screen text-g-400 font-mono overflow-x-hidden">
+
+  <!-- TICKER -->
+  <div class="bg-g-900 border-b border-g-600 overflow-hidden py-1.5">
+    <div class="flex animate-marquee whitespace-nowrap w-max select-none">
+      <span class="font-pixel text-[7px] text-g-400 px-8">⛏ MCSR PORTUGAL</span>
+      <span class="font-pixel text-[7px] text-g-600 px-8">▸ ELO LEADERBOARD 🇵🇹</span>
+      <span class="font-pixel text-[7px] text-g-400 px-8">▸ RANKED MATCHES</span>
+      <span class="font-pixel text-[7px] text-g-600 px-8">▸ POWERED BY MCSRRANKED API</span>
+      <span class="font-pixel text-[7px] text-g-400 px-8">⛏ MCSR PORTUGAL</span>
+      <span class="font-pixel text-[7px] text-g-600 px-8">▸ ELO LEADERBOARD 🇵🇹</span>
+      <span class="font-pixel text-[7px] text-g-400 px-8">▸ RANKED MATCHES</span>
+      <span class="font-pixel text-[7px] text-g-600 px-8">▸ POWERED BY MCSRRANKED API</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="border-b-2 border-g-600 bg-g-900/70 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-3 no-underline group">
+          <span class="text-xl">⛏️</span>
+          <div class="font-pixel leading-snug">
+            <div class="text-[10px] text-g-400 animate-flicker group-hover:text-white transition-colors">MCSR</div>
+            <div class="text-[8px] text-g-600">PORTUGAL</div>
+          </div>
+        </a>
+        <span class="text-g-800 font-pixel text-[8px]">/</span>
+        <span class="font-pixel text-[8px] text-g-600">LEADERBOARD</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-5">
+        <a href="index.html#ranks"     class="font-pixel text-[7px] text-g-600 hover:text-g-400 transition-colors">RANKS</a>
+        <a href="index.html#tutorials" class="font-pixel text-[7px] text-g-600 hover:text-g-400 transition-colors">TUTORIAIS</a>
+        <a href="https://discord.com/invite/pG44r3G8ud" target="_blank"
+           class="font-pixel text-[7px] border-2 border-g-400 bg-g-800 text-g-400 px-3 py-2 hover:bg-g-400 hover:text-black transition-all animate-glow flex items-center gap-2">
+          <i class="bi bi-discord text-sm leading-none"></i>
+          <span>DISCORD</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="max-w-6xl mx-auto px-6 pt-12 pb-8 animate-fu-1">
+    <div class="flex items-center gap-3 mb-2">
+      <div class="flex h-[6px] w-10 overflow-hidden border border-g-800">
+        <div class="w-2/5 bg-pt-green"></div>
+        <div class="w-3/5 bg-pt-red"></div>
+      </div>
+      <span class="font-pixel text-[7px] text-g-600 tracking-widest">MCSR RANKED · SEASON <span id="season-num">—</span></span>
+    </div>
+    <h1 class="font-pixel text-[20px] sm:text-[28px] text-white mb-3"
+        style="text-shadow:0 0 24px rgba(91,219,62,0.4),0 3px 0 #0d1f0b">
+      🏆 ELO LEADERBOARD
+    </h1>
+    <p class="font-mono text-g-600 text-sm">Todos os jogadores portugueses no MCSR Ranked, ordenados por ELO.</p>
+  </section>
+
+  <!-- SORT + STATUS -->
+  <div class="max-w-6xl mx-auto px-6 pb-4 animate-fu-2 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-2">
+      <span class="font-pixel text-[7px] text-g-600 mr-1">ORDENAR:</span>
+      <button class="sort-btn active font-pixel text-[7px] text-g-600 px-2 py-1 border border-g-800" data-sort="elo">ELO</button>
+      <button class="sort-btn font-pixel text-[7px] text-g-600 px-2 py-1 border border-g-800" data-sort="winrate">WIN%</button>
+      <button class="sort-btn font-pixel text-[7px] text-g-600 px-2 py-1 border border-g-800" data-sort="besttime">TEMPO</button>
+    </div>
+    <div id="status" class="font-pixel text-[7px] text-g-600"></div>
+  </div>
+
+  <!-- TABLE -->
+  <section class="max-w-6xl mx-auto px-6 pb-24 animate-fu-2">
+    <div class="border-2 border-g-600">
+
+      <!-- Header -->
+      <div class="bg-g-900 border-b-2 border-g-600 px-4 sm:px-6 py-3 grid items-center gap-2"
+           style="grid-template-columns:52px 32px 1fr 110px 80px 110px 28px">
+        <span class="font-pixel text-[7px] text-g-600">#</span>
+        <span></span>
+        <span class="font-pixel text-[7px] text-g-600">JOGADOR</span>
+        <span class="font-pixel text-[7px] text-g-600 text-right">ELO</span>
+        <span class="font-pixel text-[7px] text-g-600 text-right">WIN%</span>
+        <span class="font-pixel text-[7px] text-g-600 text-right">MELHOR TEMPO</span>
+        <span></span>
+      </div>
+
+      <!-- Body -->
+      <div id="lb-body" class="divide-y divide-g-900">
+        <div id="skeleton-rows">
+          ${[...Array(8)].map((_,i) => `
+          <div class="px-4 sm:px-6 py-3 grid items-center gap-2" style="grid-template-columns:52px 32px 1fr 110px 80px 110px 28px;opacity:${1-i*0.1}">
+            <div class="skeleton h-3 w-8 rounded"></div>
+            <div class="skeleton w-6 h-6"></div>
+            <div class="skeleton h-3 w-28 rounded"></div>
+            <div class="skeleton h-3 w-14 ml-auto rounded"></div>
+            <div class="skeleton h-3 w-10 ml-auto rounded"></div>
+            <div class="skeleton h-3 w-16 ml-auto rounded"></div>
+            <div class="skeleton h-3 w-3 ml-auto rounded"></div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <div id="lb-footer" class="border-t-2 border-g-600 bg-g-900/50 px-6 py-3 text-center">
+        <span class="font-pixel text-[7px] text-g-600">A CARREGAR...</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t-2 border-g-600 bg-g-900/60">
+    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-3 no-underline">
+        <span>⛏️</span>
+        <div>
+          <div class="font-pixel text-[9px] text-g-400">MCSR PORTUGAL</div>
+          <div class="font-pixel text-[6px] text-g-600 mt-1">COMUNIDADE PORTUGUESA DE SPEEDRUN</div>
+        </div>
+      </a>
+      <div class="flex items-center gap-1">
+        <div class="w-3 h-5 bg-pt-green border border-g-800"></div>
+        <div class="w-4 h-5 bg-pt-red border border-g-800"></div>
+        <span class="font-pixel text-[6px] text-g-600 ml-2">PORTUGAL 🇵🇹</span>
+      </div>
+      <div class="font-pixel text-[6px] text-g-800">POWERED BY MCSRRANKED API</div>
+    </div>
+  </footer>
+
+<script>
+const API = 'https://api.mcsrranked.com';
+
+function fmt(ms) {
+  if (ms == null) return null;
+  const s = Math.floor(ms / 1000);
+  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+}
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
+function setFooter(html) { document.getElementById('lb-footer').innerHTML = html; }
+
+// ── Sort ───────────────────────────────────────────────────────────────────
+let allPlayers = [];
+let sortKey = 'elo', sortAsc = false;
+
+function renderTable() {
+  const sorted = [...allPlayers].sort((a, b) => {
+    if (sortKey === 'elo')      return sortAsc ? (a.eloRate??0)-(b.eloRate??0)            : (b.eloRate??0)-(a.eloRate??0);
+    if (sortKey === 'winrate')  return sortAsc ? (a.winRate??-1)-(b.winRate??-1)          : (b.winRate??-1)-(a.winRate??-1);
+    if (sortKey === 'besttime') return sortAsc ? (b.bestTime??Infinity)-(a.bestTime??Infinity) : (a.bestTime??Infinity)-(b.bestTime??Infinity);
+    return 0;
+  });
+
+  document.getElementById('skeleton-rows')?.remove();
+  document.getElementById('lb-body').innerHTML = sorted.map((p, i) => {
+    const rankCls = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'text-g-600';
+    const rankLbl = i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
+    const wr      = p.winRate!=null ? `${p.winRate.toFixed(1)}%` : '—';
+    const wrCls   = p.winRate!=null ? (p.winRate>=60?'text-g-400':p.winRate>=45?'text-yellow-400':'text-red-400') : 'text-g-800';
+    const bt      = p.bestTime!=null ? fmt(p.bestTime) : '—';
+    const av      = `https://mc-heads.net/avatar/${encodeURIComponent(p.nickname)}/24`;
+    const fbAv    = `https://minotar.net/helm/${encodeURIComponent(p.nickname)}/24`;
+
+    return `
+    <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}" target="_blank"
+       class="lb-row pt-stripe px-4 sm:px-6 py-3 grid items-center gap-2 no-underline"
+       style="grid-template-columns:52px 32px 1fr 110px 80px 110px 28px">
+      <span class="font-pixel text-[9px] ${rankCls}">${rankLbl}</span>
+      <img src="${av}" class="w-6 h-6" style="image-rendering:pixelated"
+           onerror="this.onerror=null;this.src='${fbAv}'" alt="${p.nickname}"/>
+      <span class="font-mono text-g-400 text-sm truncate">${p.nickname}</span>
+      <span class="font-pixel text-[9px] text-g-400 text-right">
+        ${p.eloRate??'—'}<span class="text-g-600 text-[6px] ml-1">elo</span>
+      </span>
+      <span class="font-pixel text-[9px] ${wrCls} text-right">${wr}</span>
+      <span class="font-mono text-g-400 text-sm text-right">${bt}</span>
+      <span class="text-g-800 text-xs text-right"><i class="bi bi-box-arrow-up-right"></i></span>
+    </a>`;
+  }).join('');
+}
+
+document.querySelectorAll('.sort-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.sort;
+    if (sortKey === key) { sortAsc = !sortAsc; }
+    else {
+      sortKey = key;
+      sortAsc = key === 'besttime';
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    renderTable();
+  });
+});
+
+// ── Fetch full user profile for stats ──────────────────────────────────────
+async function fetchUserProfile(nickname) {
+  try {
+    const res  = await fetch(`${API}/users/${encodeURIComponent(nickname)}`);
+    const json = await res.json();
+    return json.status === 'success' ? json.data : null;
+  } catch { return null; }
+}
+
+// ── Main ───────────────────────────────────────────────────────────────────
+async function main() {
+  try {
+    // ── 1. Fetch Portuguese leaderboard ─────────────────────────────────
+    // Response structure: { status, data: { season: {...}, users: [...] } }
+    setStatus('A CARREGAR LEADERBOARD...');
+    const res  = await fetch(`${API}/leaderboard?country=pt`);
+    const json = await res.json();
+
+    if (!res.ok || json.status !== 'success') {
+      throw new Error(`API error: ${json?.data?.message || res.status}`);
+    }
+
+    // Season info
+    const season = json.data?.season;
+    if (season?.number) {
+      document.getElementById('season-num').textContent = season.number;
+    }
+
+    const ptPlayers = json.data?.users ?? [];
+    if (!ptPlayers.length) throw new Error('Nenhum jogador PT encontrado na resposta da API.');
+
+    setStatus(`${ptPlayers.length} JOGADORES — A CARREGAR STATS...`);
+
+    // ── 2. Enrich each player with stats from /users/{nickname} ──────────
+    // Stats path: data.statistics.season.{wins|loses|playedMatches|bestTime}.ranked
+    const BATCH = 5;
+    for (let i = 0; i < ptPlayers.length; i += BATCH) {
+      const batch    = ptPlayers.slice(i, i + BATCH);
+      const profiles = await Promise.all(batch.map(p => fetchUserProfile(p.nickname)));
+
+      batch.forEach((p, j) => {
+        const prof = profiles[j];
+        if (prof) {
+          const s      = prof.statistics?.season;
+          const wins   = s?.wins?.ranked   ?? null;
+          const loses  = s?.loses?.ranked  ?? null;
+          const played = s?.playedMatches?.ranked ?? (wins!=null&&loses!=null ? wins+loses : null);
+          p.bestTime   = s?.bestTime?.ranked ?? null;
+          p.winRate    = wins!=null && played!=null && played>0 ? (wins / played) * 100 : null;
+        }
+      });
+
+      allPlayers = ptPlayers.slice(0, i + BATCH);
+      renderTable();
+      setStatus(`A CARREGAR STATS... ${Math.min(i + BATCH, ptPlayers.length)}/${ptPlayers.length}`);
+      if (i + BATCH < ptPlayers.length) await new Promise(r => setTimeout(r, 100));
+    }
+
+    allPlayers = ptPlayers;
+    renderTable();
+    setFooter(`<span class="font-pixel text-[7px] text-g-600">${ptPlayers.length} JOGADORES PORTUGUESES · SEASON ${season?.number ?? '—'} · MCSRRANKED.COM</span>`);
+    setStatus(`✓ ${ptPlayers.length} JOGADORES CARREGADOS`);
+
+  } catch(e) {
+    document.getElementById('skeleton-rows')?.remove();
+    document.getElementById('lb-body').innerHTML =
+      `<div class="px-6 py-12 text-center">
+        <p class="font-pixel text-[8px] text-red-400 leading-loose">ERRO: ${e.message}</p>
+       </div>`;
+    setFooter(`<span class="font-pixel text-[7px] text-red-400">ERRO — ${e.message}</span>`);
+    setStatus('');
+    console.error(e);
+  }
+}
+
+main();
+</script>
+</body>
+</html>
