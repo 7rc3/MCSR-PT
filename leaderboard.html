@@ -133,7 +133,7 @@
   </section>
 
   <!-- SORT + STATUS -->
-  <div class="max-w-6xl mx-auto px-6 pb-4 animate-fu-2 flex flex-wrap items-center justify-between gap-3">
+  <div class="max-w-6xl mx-auto px-6 pb-3 animate-fu-2 flex flex-wrap items-center justify-between gap-3">
     <div class="flex items-center gap-2">
       <span class="font-pixel text-[7px] text-g-600 mr-1">ORDENAR:</span>
       <button class="sort-btn active font-pixel text-[7px] text-g-600 px-2 py-1 border border-g-800" data-sort="elo">ELO</button>
@@ -141,6 +141,18 @@
       <button class="sort-btn font-pixel text-[7px] text-g-600 px-2 py-1 border border-g-800" data-sort="besttime">TEMPO</button>
     </div>
     <div id="status" class="font-pixel text-[7px] text-g-600"></div>
+  </div>
+
+  <!-- RANK LEGEND -->
+  <div class="max-w-6xl mx-auto px-6 pb-4 animate-fu-2">
+    <div class="flex flex-wrap gap-x-4 gap-y-1">
+      <span class="font-pixel text-[6px]" style="color:#9ca3af">◆ COAL  &lt;600</span>
+      <span class="font-pixel text-[6px]" style="color:#d1d5db">◆ IRON  600–899</span>
+      <span class="font-pixel text-[6px]" style="color:#fbbf24">◆ GOLD  900–1199</span>
+      <span class="font-pixel text-[6px]" style="color:#34d399">◆ EMERALD  1200–1499</span>
+      <span class="font-pixel text-[6px]" style="color:#7dd3fc">◆ DIAMOND  1500–1999</span>
+      <span class="font-pixel text-[6px]" style="color:#c084fc">◆ NETHERITE  2000+</span>
+    </div>
   </div>
 
   <!-- TABLE -->
@@ -203,6 +215,31 @@
 <script>
 const API = 'https://api.mcsrranked.com';
 
+// ── Rank tiers (from image) ────────────────────────────────────────────────
+const RANKS = [
+  { name: 'Netherite',  min: 2000, color: '#c084fc', shadow: 'rgba(192,132,252,0.6)' },
+  { name: 'Diamond III',min: 1800, color: '#7dd3fc', shadow: 'rgba(125,211,252,0.5)' },
+  { name: 'Diamond II', min: 1650, color: '#7dd3fc', shadow: 'rgba(125,211,252,0.5)' },
+  { name: 'Diamond I',  min: 1500, color: '#7dd3fc', shadow: 'rgba(125,211,252,0.5)' },
+  { name: 'Emerald III',min: 1400, color: '#34d399', shadow: 'rgba(52,211,153,0.5)'  },
+  { name: 'Emerald II', min: 1300, color: '#34d399', shadow: 'rgba(52,211,153,0.5)'  },
+  { name: 'Emerald I',  min: 1200, color: '#34d399', shadow: 'rgba(52,211,153,0.5)'  },
+  { name: 'Gold III',   min: 1100, color: '#fbbf24', shadow: 'rgba(251,191,36,0.5)'  },
+  { name: 'Gold II',    min: 1000, color: '#fbbf24', shadow: 'rgba(251,191,36,0.5)'  },
+  { name: 'Gold I',     min:  900, color: '#fbbf24', shadow: 'rgba(251,191,36,0.5)'  },
+  { name: 'Iron III',   min:  800, color: '#d1d5db', shadow: 'rgba(209,213,219,0.4)' },
+  { name: 'Iron II',    min:  700, color: '#d1d5db', shadow: 'rgba(209,213,219,0.4)' },
+  { name: 'Iron I',     min:  600, color: '#d1d5db', shadow: 'rgba(209,213,219,0.4)' },
+  { name: 'Coal III',   min:  500, color: '#9ca3af', shadow: 'rgba(156,163,175,0.3)' },
+  { name: 'Coal II',    min:  400, color: '#9ca3af', shadow: 'rgba(156,163,175,0.3)' },
+  { name: 'Coal I',     min:    0, color: '#9ca3af', shadow: 'rgba(156,163,175,0.3)' },
+];
+
+function getRank(elo) {
+  if (elo == null) return null;
+  return RANKS.find(r => elo >= r.min) ?? RANKS[RANKS.length - 1];
+}
+
 function fmt(ms) {
   if (ms == null) return null;
   const s = Math.floor(ms / 1000);
@@ -232,17 +269,19 @@ function renderTable() {
     const bt      = p.bestTime!=null ? fmt(p.bestTime) : '—';
     const av      = `https://mc-heads.net/avatar/${encodeURIComponent(p.nickname)}/24`;
     const fbAv    = `https://minotar.net/helm/${encodeURIComponent(p.nickname)}/24`;
+    const rank    = getRank(p.eloRate);
+    const eloStyle = rank ? `color:${rank.color};text-shadow:0 0 8px ${rank.shadow}` : '';
 
     return `
-    <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}" target="_blank"
+    <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}?country=PT" target="_blank"
        class="lb-row pt-stripe px-4 sm:px-6 py-3 grid items-center gap-2 no-underline"
        style="grid-template-columns:52px 32px 1fr 110px 80px 110px 28px">
       <span class="font-pixel text-[9px] ${rankCls}">${rankLbl}</span>
       <img src="${av}" class="w-6 h-6" style="image-rendering:pixelated"
            onerror="this.onerror=null;this.src='${fbAv}'" alt="${p.nickname}"/>
       <span class="font-mono text-g-400 text-sm truncate">${p.nickname}</span>
-      <span class="font-pixel text-[9px] text-g-400 text-right">
-        ${p.eloRate??'—'}<span class="text-g-600 text-[6px] ml-1">elo</span>
+      <span class="font-pixel text-[9px] text-right" style="${eloStyle}" title="${rank?.name ?? ''}">
+        ${p.eloRate??'—'}<span class="text-[6px] ml-1" style="opacity:0.6">elo</span>
       </span>
       <span class="font-pixel text-[9px] ${wrCls} text-right">${wr}</span>
       <span class="font-mono text-g-400 text-sm text-right">${bt}</span>
