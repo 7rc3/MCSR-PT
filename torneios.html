@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Torneios — MCSR Portugal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            pt: { red: '#da291c', green: '#046a38' },
+          },
+        },
+      },
+    }
+  </script>
+  <!-- Event data lives here — edit this file to add or update tournaments -->
+  <script src="assets/torneios.js"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-300 font-sans antialiased min-h-screen">
+
+  <!-- Flag accent -->
+  <div class="flex h-0.5">
+    <div class="w-2/5 bg-pt-green"></div>
+    <div class="w-3/5 bg-pt-red"></div>
+  </div>
+
+  <!-- NAV -->
+  <header class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur">
+    <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div class="flex min-w-0 items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5">
+          <img src="assets/portugalmcsrlogo.png" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
+          <span class="hidden text-sm font-semibold tracking-tight text-white sm:inline">MCSR Portugal</span>
+        </a>
+        <span class="text-zinc-700">/</span>
+        <span class="truncate text-sm text-zinc-400">Torneios</span>
+      </div>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <a href="leaderboard.html"     class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">Ranking</a>
+        <a href="index.html#tutorials" class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">Tutoriais</a>
+        <a href="https://discord.com/invite/pG44r3G8ud" target="_blank" rel="noopener"
+           class="ml-1 inline-flex items-center gap-2 rounded-md bg-white px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200">
+          <i class="bi bi-discord"></i>
+          <span>Discord</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+
+    <!-- PAGE HEADER -->
+    <section class="pb-10 pt-10 sm:pt-14">
+      <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Torneios</h1>
+      <p class="mt-2 text-sm text-zinc-400 sm:text-base">Torneios e eventos da comunidade portuguesa de MCSR.</p>
+    </section>
+
+    <div id="events" class="flex flex-col gap-12"></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-zinc-800">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <img src="assets/portugalmcsrlogo.png" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
+        <span class="text-zinc-400">MCSR Portugal <span class="text-zinc-600">· Comunidade portuguesa de speedrun</span></span>
+      </a>
+      <a href="https://discord.com/invite/pG44r3G8ud" target="_blank" rel="noopener" aria-label="Discord"
+         class="text-zinc-500 transition-colors hover:text-white">
+        <i class="bi bi-discord text-lg"></i>
+      </a>
+    </div>
+  </footer>
+
+<script>
+// Renders the TORNEIOS list from assets/torneios.js. To add events, edit that file, not this one.
+
+const SECTIONS = [
+  { status: 'a-decorrer', title: 'A decorrer', badge: 'A decorrer', badgeCls: 'border-pt-red/40 bg-pt-red/10 text-red-400',        dot: 'bg-pt-red' },
+  { status: 'em-breve',   title: 'Próximos',   badge: 'Em breve',   badgeCls: 'border-pt-green/50 bg-pt-green/10 text-emerald-400', dot: 'bg-pt-green' },
+  { status: 'terminado',  title: 'Terminados', badge: 'Terminado',  badgeCls: 'border-zinc-700 bg-zinc-800/50 text-zinc-400',       dot: 'bg-zinc-600' },
+];
+
+const esc = str => String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function fmtDate(date, time) {
+  if (!date) return 'Datas no Discord!';
+  const d = new Date(`${date}T00:00:00`);
+  const txt = d.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
+  return time ? `${txt} · ${time}` : txt;
+}
+
+function renderEvent(ev, section) {
+  const details = (ev.details ?? []).map(d => `
+    <div class="flex justify-between gap-4 border-t border-zinc-800/70 py-2 text-sm first:border-t-0">
+      <dt class="text-zinc-500">${esc(d.label)}</dt>
+      <dd class="text-right text-zinc-200">${esc(d.value)}</dd>
+    </div>`).join('');
+
+  const podiumCls = ['text-amber-300', 'text-zinc-200', 'text-orange-400'];
+  const podium = (ev.podium ?? []).length ? `
+    <div class="mt-5">
+      <div class="mb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-500">Pódio</div>
+      <ol class="divide-y divide-zinc-800/70 rounded-md border border-zinc-800">
+        ${ev.podium.map((nick, i) => `
+          <li class="flex items-center gap-3 px-3 py-2 text-sm">
+            <span class="w-4 font-mono font-semibold ${podiumCls[i] ?? 'text-zinc-500'}">${i + 1}</span>
+            <img src="https://mc-heads.net/avatar/${encodeURIComponent(nick)}/20" class="h-5 w-5 rounded-sm" style="image-rendering:pixelated" alt=""/>
+            <span class="truncate font-medium text-zinc-100">${esc(nick)}</span>
+          </li>`).join('')}
+      </ol>
+    </div>` : '';
+
+  const links = (ev.links ?? []).map((l, i) => `
+    <a href="${esc(l.url)}" target="_blank" rel="noopener"
+       class="inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+         i === 0 ? 'bg-white text-zinc-950 hover:bg-zinc-200'
+                 : 'border border-zinc-800 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-900 hover:text-white'}">
+      ${l.icon ? `<i class="bi bi-${esc(l.icon)}"></i>` : ''}${esc(l.label)}
+    </a>`).join('');
+
+  return `
+  <article class="flex flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/40">
+    ${ev.image ? `<img src="${esc(ev.image)}" alt="" class="aspect-[21/9] w-full border-b border-zinc-800 object-cover" />` : ''}
+    <div class="flex flex-1 flex-col p-5 sm:p-6">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${section.badgeCls}">
+          <span class="h-1.5 w-1.5 rounded-full ${section.dot}"></span>${section.badge}
+        </span>
+        ${ev.edition ? `<span class="text-xs font-medium text-zinc-500">${esc(ev.edition)}</span>` : ''}
+      </div>
+      <h3 class="mt-3 text-xl font-semibold tracking-tight text-white">${esc(ev.name)}</h3>
+      <div class="mt-1.5 flex items-center gap-2 text-sm text-zinc-400">
+        <i class="bi bi-calendar3 text-xs text-zinc-500"></i>${esc(fmtDate(ev.date, ev.time))}
+      </div>
+      ${ev.description ? `<p class="mt-4 text-sm leading-6 text-zinc-400">${esc(ev.description)}</p>` : ''}
+      ${details ? `<dl class="mt-5 rounded-md border border-zinc-800 px-3">${details}</dl>` : ''}
+      ${podium}
+      ${links ? `<div class="mt-6 flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap">${links}</div>` : ''}
+    </div>
+  </article>`;
+}
+
+function render() {
+  const events = typeof TORNEIOS !== 'undefined' ? TORNEIOS : [];
+  const root = document.getElementById('events');
+
+  const html = SECTIONS.map(section => {
+    const list = events
+      .filter(ev => ev.status === section.status)
+      // Upcoming/live: soonest first, undated last. Finished: most recent first.
+      .sort((a, b) => {
+        const da = a.date ?? '9999', db = b.date ?? '9999';
+        return section.status === 'terminado' ? db.localeCompare(da) : da.localeCompare(db);
+      });
+    if (!list.length) return '';
+    return `
+    <section>
+      <h2 class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+        ${section.title} <span class="font-mono text-zinc-600">${list.length}</span>
+      </h2>
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        ${list.map(ev => renderEvent(ev, section)).join('')}
+      </div>
+    </section>`;
+  }).join('');
+
+  root.innerHTML = html || `
+    <div class="flex flex-col items-center gap-2 rounded-lg border border-dashed border-zinc-800 px-6 py-14 text-center">
+      <i class="bi bi-trophy text-xl text-zinc-600"></i>
+      <p class="text-sm text-zinc-500">Ainda não há torneios anunciados.</p>
+    </div>`;
+}
+
+render();
+</script>
+</body>
+</html>

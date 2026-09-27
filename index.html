@@ -5,330 +5,274 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MCSR Portugal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            pixel: ['"Press Start 2P"', 'monospace'],
-            mono:  ['"Share Tech Mono"', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
           },
           colors: {
-            g: {
-              400: '#5bdb3e',
-              600: '#2e7d22',
-              800: '#1a3d10',
-              900: '#0d1f0b',
-            },
-            pt: { red: '#d9000d', green: '#006600' },
-          },
-          keyframes: {
-            flicker:  { '0%,100%': {opacity:'1'}, '50%': {opacity:'0.82'} },
-            fadeUp:   { '0%': {opacity:'0',transform:'translateY(20px)'}, '100%': {opacity:'1',transform:'translateY(0)'} },
-            glow:     { '0%,100%': {boxShadow:'0 0 6px rgba(91,219,62,0.4)'}, '50%': {boxShadow:'0 0 22px rgba(91,219,62,0.85)'} },
-            marquee:  { '0%': {transform:'translateX(0)'}, '100%': {transform:'translateX(-50%)'} },
-          },
-          animation: {
-            flicker:    'flicker 3s ease-in-out infinite',
-            glow:       'glow 2.2s ease-in-out infinite',
-            marquee:    'marquee 28s linear infinite',
-            'fu-1':     'fadeUp 0.6s ease both 0.05s',
-            'fu-2':     'fadeUp 0.6s ease both 0.2s',
-            'fu-3':     'fadeUp 0.6s ease both 0.35s',
-            'fu-4':     'fadeUp 0.6s ease both 0.5s',
-            'fu-5':     'fadeUp 0.6s ease both 0.65s',
+            pt: { red: '#da291c', green: '#046a38' },
           },
         },
       },
     }
   </script>
-  <style>
-    /* CRT scanlines */
-    body::before {
-      content: ''; pointer-events: none; position: fixed; inset: 0; z-index: 9999;
-      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
-    }
-    /* Pixel grid bg */
-    .pixel-bg {
-      background-color: #080e06;
-      background-image: linear-gradient(rgba(46,125,34,0.06) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(46,125,34,0.06) 1px, transparent 1px);
-      background-size: 32px 32px;
-    }
-    .card-hover { transition: box-shadow 0.2s, border-color 0.2s; }
-    .card-hover:hover { border-color: #5bdb3e; box-shadow: 0 0 0 1px #5bdb3e, 0 0 28px rgba(91,219,62,0.2); }
-    /* PT flag left stripe */
-    .pt-stripe { position: relative; }
-    .pt-stripe::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-      background: linear-gradient(to bottom, #006600 50%, #d9000d 50%);
-    }
-    html { scroll-behavior: smooth; }
-    [id] { scroll-margin-top: 72px; }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: #080e06; }
-    ::-webkit-scrollbar-thumb { background: #2e7d22; }
-    ::-webkit-scrollbar-thumb:hover { background: #5bdb3e; }
-  </style>
 </head>
-<body class="pixel-bg min-h-screen text-g-400 font-mono overflow-x-hidden">
+<body class="bg-zinc-950 text-zinc-300 font-sans antialiased min-h-screen">
 
-  <!-- TICKER -->
-  <div class="bg-g-900 border-b border-g-600 overflow-hidden py-1.5">
-    <div class="flex animate-marquee whitespace-nowrap w-max select-none">
-      <span class="font-pixel text-[7px] text-g-400 px-8">⛏ MCSR PORTUGAL</span>
-      <span class="font-pixel text-[7px] text-g-600 px-8">▸ SPEEDRUNS</span>
-      <span class="font-pixel text-[7px] text-g-400 px-8">▸ LEADERBOARDS NACIONAIS</span>
-      <span class="font-pixel text-[7px] text-g-600 px-8">▸ TUTORIAIS EM PORTUGUÊS</span>
-      <span class="font-pixel text-[7px] text-g-400 px-8">▸ COMUNIDADE 🇵🇹</span>
-      <span class="font-pixel text-[7px] text-g-600 px-8">▸ RANKED MATCHES</span>
-      <span class="font-pixel text-[7px] text-g-400 px-8">⛏ MCSR PORTUGAL</span>
-      <span class="font-pixel text-[7px] text-g-600 px-8">▸ SPEEDRUNS</span>
-      <span class="font-pixel text-[7px] text-g-400 px-8">▸ LEADERBOARDS NACIONAIS</span>
-      <span class="font-pixel text-[7px] text-g-600 px-8">▸ TUTORIAIS EM PORTUGUÊS</span>
-      <span class="font-pixel text-[7px] text-g-400 px-8">▸ COMUNIDADE 🇵🇹</span>
-      <span class="font-pixel text-[7px] text-g-600 px-8">▸ RANKED MATCHES</span>
-    </div>
+  <!-- Flag accent -->
+  <div class="flex h-0.5">
+    <div class="w-2/5 bg-pt-green"></div>
+    <div class="w-3/5 bg-pt-red"></div>
   </div>
 
   <!-- NAV -->
-  <nav class="border-b-2 border-g-600 bg-g-900/70 backdrop-blur-sm sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="text-xl">⛏️</span>
-        <div class="font-pixel leading-snug">
-          <div class="text-[10px] text-g-400 animate-flicker">MCSR</div>
-          <div class="text-[8px] text-g-600">PORTUGAL</div>
-        </div>
-      </div>
-      <div class="hidden sm:flex items-center gap-5">
-        <a href="#"          class="font-pixel text-[7px] text-g-600 hover:text-g-400 transition-colors">TORNEIOS</a>
-        <a href="#ranks"     class="font-pixel text-[7px] text-g-600 hover:text-g-400 transition-colors">RANKS</a>
-        <a href="#tutorials" class="font-pixel text-[7px] text-g-600 hover:text-g-400 transition-colors">TUTORIAIS</a>
-        <a href="https://discord.com/invite/pG44r3G8ud"   class="font-pixel text-[7px] border-2 border-g-400 bg-g-800 text-g-400 px-3 py-2 hover:bg-g-400 hover:text-black transition-all animate-glow flex items-center gap-2" target="_blank">
-          <i class="bi bi-discord mb-0.5 text-sm leading-none"></i>
-          <span>DISCORD</span>
+  <header class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur">
+    <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <a href="#" class="flex items-center gap-2.5">
+        <img src="assets/portugalmcsrlogo.png" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
+        <span class="text-sm font-semibold tracking-tight text-white">MCSR Portugal</span>
+      </a>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <a href="torneios.html" class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white md:block">Torneios</a>
+        <a href="#ranks"     class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">Ranking</a>
+        <a href="#tutorials" class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">Tutoriais</a>
+        <a href="https://discord.gg/C6WZs4Eq3n" target="_blank" rel="noopener"
+           class="ml-1 inline-flex items-center gap-2 rounded-md bg-white px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200">
+          <i class="bi bi-discord"></i>
+          <span>Discord</span>
         </a>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
 
-  <!-- HERO -->
-  <section class="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
-
-    <!-- Portugal bar -->
-    <div class="flex justify-center mb-10 animate-fu-1">
-      <div class="flex h-[6px] w-40 overflow-hidden rounded-none border border-g-800">
-        <div class="w-2/5 bg-pt-green"></div>
-        <div class="w-3/5 bg-pt-red"></div>
-      </div>
-    </div>
-
-    <div class="animate-fu-1">
-      <p class="font-pixel text-[9px] sm:text-[11px] text-g-600 mb-3 tracking-widest"></p>
-      <h1 class="font-pixel text-[32px] sm:text-[52px] text-white mb-3"
-          style="text-shadow: 0 0 30px rgba(91,219,62,0.45), 0 4px 0 #0d1f0b, 0 0 60px rgba(91,219,62,0.2)">
-        MCSR<span class="text-pt-green ml-5">POR</span><span class="text-pt-red">TUGAL</span>
-      </h1>
-    </div>
-
-    <p class="animate-fu-2 font-mono text-g-600 text-sm max-w-lg mx-auto leading-7 mt-8 mb-10">
-      A comunidade portuguesa de MCSR.<br/>
-      Leaderboards nacionais, tutoriais em português<br/>
-      e tudo o que precisas para começar.
-    </p>
-
-    <div class="animate-fu-3 flex flex-wrap justify-center gap-4 mb-16">
-      <a href="#ranks"
-         class="font-pixel text-[8px] border-2 border-g-400 bg-g-800 text-g-400 px-6 py-3 hover:bg-g-400 hover:text-black transition-all animate-glow">
-        🏆 VER LEADERBOARD
-      </a>
-      <a href="#tutorials"
-         class="font-pixel text-[8px] border-2 border-g-600 text-g-600 px-6 py-3 hover:border-g-400 hover:text-g-400 transition-all">
-        📖 TUTORIAIS
-      </a>
-    </div>
-
-    <!-- pixel divider -->
-    <div class="animate-fu-4 flex justify-center">
-      <div class="flex items-center gap-1">
-        <div class="w-2 h-2 bg-g-900"></div>
-        <div class="w-2 h-2 bg-g-800"></div>
-        <div class="w-2 h-2 bg-g-600"></div>
-        <div class="w-24 h-[2px] bg-g-600"></div>
-        <div class="w-3 h-3 bg-g-400"></div>
-        <div class="w-24 h-[2px] bg-g-600"></div>
-        <div class="w-2 h-2 bg-g-600"></div>
-        <div class="w-2 h-2 bg-g-800"></div>
-        <div class="w-2 h-2 bg-g-900"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FEATURE CARDS -->
-  <section class="max-w-6xl mx-auto px-6 pb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <a href="leaderboard.html" class="pt-stripe card-hover bg-g-900/50 border-2 border-g-600 p-6 flex flex-col gap-4 group animate-fu-2 no-underline">
-      <div class="text-3xl">🏆</div>
-      <div>
-        <div class="font-pixel text-[8px] text-g-400 mb-2 group-hover:text-white transition-colors">ELO NACIONAL</div>
-        <p class="font-mono text-g-600 text-xs leading-relaxed">Ranking dos melhores jogadores portugueses por pontos ELO.</p>
-      </div>
-      <div class="mt-auto font-pixel text-[7px] text-g-600 group-hover:text-g-400 transition-colors">VER RANKING ▸</div>
-    </a>
-
-    <a href="#ranks" class="pt-stripe card-hover bg-g-900/50 border-2 border-g-600 p-6 flex flex-col gap-4 group animate-fu-3 no-underline">
-      <div class="text-3xl">⏱️</div>
-      <div>
-        <div class="font-pixel text-[8px] text-g-400 mb-2 group-hover:text-white transition-colors">MELHORES TEMPOS</div>
-        <p class="font-mono text-g-600 text-xs leading-relaxed">As runs mais rápidos de jogadores portugueses.</p>
-      </div>
-      <div class="mt-auto font-pixel text-[7px] text-g-600 group-hover:text-g-400 transition-colors">VER TEMPOS ▸</div>
-    </a>
-
-    <a href="#tutorials" class="pt-stripe card-hover bg-g-900/50 border-2 border-g-600 p-6 flex flex-col gap-4 group animate-fu-4 no-underline">
-      <div class="text-3xl">📖</div>
-      <div>
-        <div class="font-pixel text-[8px] text-g-400 mb-2 group-hover:text-white transition-colors">TUTORIAIS</div>
-        <p class="font-mono text-g-600 text-xs leading-relaxed">Guias em português para aprender a fazer speedruns.</p>
-      </div>
-      <div class="mt-auto font-pixel text-[7px] text-g-600 group-hover:text-g-400 transition-colors">VER TUTORIAIS ▸</div>
-    </a>
-
-    <a href="#discord" class="pt-stripe card-hover bg-g-900/50 border-2 border-g-600 p-6 flex flex-col gap-4 group animate-fu-5 no-underline">
-      <div class="text-3xl">💬</div>
-      <div>
-        <div class="font-pixel text-[8px] text-g-400 mb-2 group-hover:text-white transition-colors">DISCORD</div>
-        <p class="font-mono text-g-600 text-xs leading-relaxed">Junta-te ao servidor e faz parte da comunidade.</p>
-      </div>
-      <div class="mt-auto font-pixel text-[7px] text-g-600 group-hover:text-g-400 transition-colors">ENTRAR ▸</div>
-    </a>
-  </section>
-
-  <!-- LEADERBOARD PREVIEW -->
-  <section id="ranks" class="max-w-6xl mx-auto px-6 pb-20">
-    <div class="border-2 border-g-600">
-      <div class="bg-g-900 border-b-2 border-g-600 px-6 py-3 flex items-center justify-between">
-        <span class="font-pixel text-[9px] text-g-400">🏆 ELO LEADERBOARD — 🇵🇹 PORTUGAL</span>
-        <span class="font-pixel text-[7px] text-g-600 border border-g-800 px-2 py-1">EM BREVE</span>
-      </div>
-
-      <!-- Table header -->
-      <div class="px-6 py-2 grid grid-cols-12 border-b border-g-800 bg-g-900/30">
-        <span class="col-span-1 font-pixel text-[7px] text-g-600">#</span>
-        <span class="col-span-1"></span>
-        <span class="col-span-4 font-pixel text-[7px] text-g-600">JOGADOR</span>
-        <span class="col-span-3 font-pixel text-[7px] text-g-600 text-right">ELO</span>
-        <span class="col-span-2 font-pixel text-[7px] text-g-600 text-right">WINS</span>
-        <span class="col-span-1 font-pixel text-[7px] text-g-600 text-right">W%</span>
-      </div>
-
-      <!-- Mock rows (fading) -->
-      <div class="divide-y divide-g-900">
-        <div class="px-6 py-3 grid grid-cols-12 items-center gap-1 opacity-50 hover:opacity-80 transition-opacity">
-          <span class="col-span-1 font-pixel text-[9px] text-yellow-400">#1</span>
-          <span class="col-span-1"><img src="https://mc-heads.net/avatar/MHF_Steve/24" class="w-6 h-6" style="image-rendering:pixelated" alt=""/></span>
-          <span class="col-span-4 font-mono text-g-400 text-sm">?????????</span>
-          <span class="col-span-3 font-pixel text-[8px] text-g-400 text-right">???? <span class="text-g-600">elo</span></span>
-          <span class="col-span-2 font-pixel text-[7px] text-g-600 text-right">???</span>
-          <span class="col-span-1 font-pixel text-[7px] text-g-600 text-right">??%</span>
-        </div>
-        <div class="px-6 py-3 grid grid-cols-12 items-center gap-1 opacity-30 hover:opacity-60 transition-opacity">
-          <span class="col-span-1 font-pixel text-[9px] text-gray-400">#2</span>
-          <span class="col-span-1"><img src="https://mc-heads.net/avatar/MHF_Alex/24" class="w-6 h-6" style="image-rendering:pixelated" alt=""/></span>
-          <span class="col-span-4 font-mono text-g-400 text-sm">?????????</span>
-          <span class="col-span-3 font-pixel text-[8px] text-g-400 text-right">???? <span class="text-g-600">elo</span></span>
-          <span class="col-span-2 font-pixel text-[7px] text-g-600 text-right">???</span>
-          <span class="col-span-1 font-pixel text-[7px] text-g-600 text-right">??%</span>
-        </div>
-        <div class="px-6 py-3 grid grid-cols-12 items-center gap-1 opacity-15 hover:opacity-40 transition-opacity">
-          <span class="col-span-1 font-pixel text-[9px] text-amber-700">#3</span>
-          <span class="col-span-1"><img src="https://mc-heads.net/avatar/MHF_Steve/24" class="w-6 h-6" style="image-rendering:pixelated" alt=""/></span>
-          <span class="col-span-4 font-mono text-g-400 text-sm">?????????</span>
-          <span class="col-span-3 font-pixel text-[8px] text-g-400 text-right">???? <span class="text-g-600">elo</span></span>
-          <span class="col-span-2 font-pixel text-[7px] text-g-600 text-right">???</span>
-          <span class="col-span-1 font-pixel text-[7px] text-g-600 text-right">??%</span>
+  <main>
+    <!-- HERO -->
+    <section class="mx-auto max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-24">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs font-medium text-zinc-400">
+          <span class="h-1.5 w-1.5 rounded-full bg-pt-green"></span>
+          Comunidade portuguesa de speedrun
+        </span>
+        <h1 class="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+          Minecraft Speedrunning <span class="text-zinc-500">Portugal</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
+          Tutoriais em português, torneios, Discord e comunidade.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="leaderboard.html"
+             class="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200">
+            Ver leaderboard
+            <i class="bi bi-arrow-right"></i>
+          </a>
+          <a href="#tutorials"
+             class="inline-flex items-center justify-center rounded-md border border-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-700 hover:bg-zinc-900 hover:text-white">
+            Tutoriais
+          </a>
         </div>
       </div>
-      <div class="border-t-2 border-g-600 bg-g-900/50 px-6 py-3 text-center">
-        <a href="leaderboard.html" class="font-pixel text-[7px] text-g-600 hover:text-g-400 transition-colors">VER LEADERBOARD COMPLETO ▸</a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TUTORIALS SECTION -->
-  <section id="tutorials" class="max-w-6xl mx-auto px-6 pb-20">
-    <div class="border-2 border-g-600">
-      <div class="bg-g-900 border-b-2 border-g-600 px-6 py-3 flex items-center justify-between">
-        <span class="font-pixel text-[9px] text-g-400">📖 TUTORIAIS</span>
-        <span class="font-pixel text-[7px] text-g-600 border border-g-800 px-2 py-1">EM BREVE</span>
+    <!-- FEATURE CARDS -->
+    <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <a href="leaderboard.html" class="group flex flex-col rounded-lg border border-zinc-800 bg-zinc-900/40 p-5 transition-colors hover:border-zinc-700 hover:bg-zinc-900">
+          <i class="bi bi-trophy text-lg text-zinc-400 transition-colors group-hover:text-white"></i>
+          <h3 class="mt-4 text-sm font-semibold text-white">ELO nacional</h3>
+          <p class="mt-1.5 text-sm leading-6 text-zinc-400">Ranking dos melhores jogadores portugueses por pontos ELO.</p>
+          <span class="mt-5 inline-flex items-center gap-1 text-xs font-medium text-zinc-500 transition-colors group-hover:text-zinc-300">
+            Ver ranking <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"></i>
+          </span>
+        </a>
+
+        <a href="#ranks" class="group flex flex-col rounded-lg border border-zinc-800 bg-zinc-900/40 p-5 transition-colors hover:border-zinc-700 hover:bg-zinc-900">
+          <i class="bi bi-stopwatch text-lg text-zinc-400 transition-colors group-hover:text-white"></i>
+          <h3 class="mt-4 text-sm font-semibold text-white">Melhores tempos</h3>
+          <p class="mt-1.5 text-sm leading-6 text-zinc-400">As runs mais rápidas de jogadores portugueses.</p>
+          <span class="mt-5 inline-flex items-center gap-1 text-xs font-medium text-zinc-500 transition-colors group-hover:text-zinc-300">
+            Ver tempos <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"></i>
+          </span>
+        </a>
+
+        <a href="#tutorials" class="group flex flex-col rounded-lg border border-zinc-800 bg-zinc-900/40 p-5 transition-colors hover:border-zinc-700 hover:bg-zinc-900">
+          <i class="bi bi-journal-text text-lg text-zinc-400 transition-colors group-hover:text-white"></i>
+          <h3 class="mt-4 text-sm font-semibold text-white">Tutoriais</h3>
+          <p class="mt-1.5 text-sm leading-6 text-zinc-400">Guias em português para aprender a fazer speedruns.</p>
+          <span class="mt-5 inline-flex items-center gap-1 text-xs font-medium text-zinc-500 transition-colors group-hover:text-zinc-300">
+            Ver tutoriais <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"></i>
+          </span>
+        </a>
+
+        <a href="#discord" class="group flex flex-col rounded-lg border border-zinc-800 bg-zinc-900/40 p-5 transition-colors hover:border-zinc-700 hover:bg-zinc-900">
+          <i class="bi bi-discord text-lg text-zinc-400 transition-colors group-hover:text-white"></i>
+          <h3 class="mt-4 text-sm font-semibold text-white">Discord</h3>
+          <p class="mt-1.5 text-sm leading-6 text-zinc-400">Junta-te ao servidor e faz parte da comunidade.</p>
+          <span class="mt-5 inline-flex items-center gap-1 text-xs font-medium text-zinc-500 transition-colors group-hover:text-zinc-300">
+            Entrar <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"></i>
+          </span>
+        </a>
       </div>
-      <div class="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-g-800">
-        <div class="p-6 flex flex-col gap-3 opacity-60 hover:opacity-90 transition-opacity">
-          <div class="w-full aspect-video bg-g-900 border border-g-800 flex flex-col items-center justify-center gap-2">
-            <span class="text-2xl">▶</span>
-            <span class="font-pixel text-[7px] text-g-600">EM BREVE</span>
+    </section>
+
+    <!-- LEADERBOARD PREVIEW -->
+    <section id="ranks" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-20 sm:px-6">
+      <div class="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-semibold tracking-tight text-white">Leaderboard ELO</h2>
+          <p class="mt-1 text-sm text-zinc-500">Os melhores jogadores portugueses no MCSR Ranked.</p>
+        </div>
+        <a href="leaderboard.html" class="hidden shrink-0 items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-white sm:inline-flex">
+          Ver completo <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="overflow-hidden rounded-lg border border-zinc-800">
+        <div class="grid grid-cols-[2.5rem_1fr_5rem] items-center gap-3 border-b border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-[11px] font-medium uppercase tracking-wider text-zinc-500 sm:grid-cols-[3rem_1fr_7rem_5rem_4rem] sm:px-5">
+          <span>#</span>
+          <span>Jogador</span>
+          <span class="text-right">ELO</span>
+          <span class="hidden text-right sm:block">Vitórias</span>
+          <span class="hidden text-right sm:block">Win%</span>
+        </div>
+
+        <div id="preview-body" class="animate-pulse divide-y divide-zinc-800/70">
+          <div class="grid grid-cols-[2.5rem_1fr_5rem] items-center gap-3 px-4 py-3 sm:grid-cols-[3rem_1fr_7rem_5rem_4rem] sm:px-5">
+            <span class="h-2.5 w-3 rounded bg-zinc-800"></span>
+            <span class="flex items-center gap-3"><span class="h-6 w-6 rounded bg-zinc-800"></span><span class="h-2.5 w-28 rounded bg-zinc-800"></span></span>
+            <span class="ml-auto h-2.5 w-12 rounded bg-zinc-800"></span>
+            <span class="ml-auto hidden h-2.5 w-8 rounded bg-zinc-800 sm:block"></span>
+            <span class="ml-auto hidden h-2.5 w-8 rounded bg-zinc-800 sm:block"></span>
           </div>
-          <span class="font-pixel text-[8px] text-g-400 leading-loose">INTRODUÇÃO AO SPEEDRUN</span>
-          <span class="font-mono text-g-600 text-xs"></span>
-        </div>
-        <div class="p-6 flex flex-col gap-3 opacity-35 hover:opacity-70 transition-opacity">
-          <div class="w-full aspect-video bg-g-900 border border-g-800 flex flex-col items-center justify-center gap-2">
-            <span class="text-2xl">▶</span>
-            <span class="font-pixel text-[7px] text-g-600">EM BREVE</span>
+          <div class="grid grid-cols-[2.5rem_1fr_5rem] items-center gap-3 px-4 py-3 sm:grid-cols-[3rem_1fr_7rem_5rem_4rem] sm:px-5">
+            <span class="h-2.5 w-3 rounded bg-zinc-800"></span>
+            <span class="flex items-center gap-3"><span class="h-6 w-6 rounded bg-zinc-800"></span><span class="h-2.5 w-28 rounded bg-zinc-800"></span></span>
+            <span class="ml-auto h-2.5 w-12 rounded bg-zinc-800"></span>
+            <span class="ml-auto hidden h-2.5 w-8 rounded bg-zinc-800 sm:block"></span>
+            <span class="ml-auto hidden h-2.5 w-8 rounded bg-zinc-800 sm:block"></span>
           </div>
-          <span class="font-pixel text-[8px] text-g-400 leading-loose">NETHER ROUTING</span>
-          <span class="font-mono text-g-600 text-xs"></span>
-        </div>
-        <div class="p-6 flex flex-col gap-3 opacity-15 hover:opacity-50 transition-opacity">
-          <div class="w-full aspect-video bg-g-900 border border-g-800 flex flex-col items-center justify-center gap-2">
-            <span class="text-2xl">▶</span>
-            <span class="font-pixel text-[7px] text-g-600">EM BREVE</span>
+          <div class="grid grid-cols-[2.5rem_1fr_5rem] items-center gap-3 px-4 py-3 sm:grid-cols-[3rem_1fr_7rem_5rem_4rem] sm:px-5">
+            <span class="h-2.5 w-3 rounded bg-zinc-800"></span>
+            <span class="flex items-center gap-3"><span class="h-6 w-6 rounded bg-zinc-800"></span><span class="h-2.5 w-28 rounded bg-zinc-800"></span></span>
+            <span class="ml-auto h-2.5 w-12 rounded bg-zinc-800"></span>
+            <span class="ml-auto hidden h-2.5 w-8 rounded bg-zinc-800 sm:block"></span>
+            <span class="ml-auto hidden h-2.5 w-8 rounded bg-zinc-800 sm:block"></span>
           </div>
-          <span class="font-pixel text-[8px] text-g-400 leading-loose">END FIGHT</span>
-          <span class="font-mono text-g-600 text-xs"></span>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- DISCORD CTA -->
-  <section id="discord" class="max-w-6xl mx-auto px-6 pb-24">
-    <div class="border-2 border-g-600 bg-g-900/40 p-10 text-center flex flex-col items-center gap-6">
-      <div class="font-pixel text-[9px] text-g-600 tracking-widest">JUNTA-TE À COMUNIDADE</div>
-      <div class="font-pixel text-[18px] sm:text-[26px] text-white"
-           style="text-shadow: 0 0 20px rgba(91,219,62,0.4), 0 3px 0 #0d1f0b">
-        DISCORD 🇵🇹
+        <a href="leaderboard.html" class="flex items-center justify-center gap-1.5 border-t border-zinc-800 bg-zinc-900/40 px-5 py-3 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white">
+          Ver leaderboard completo <i class="bi bi-arrow-right"></i>
+        </a>
       </div>
-      <p class="font-mono text-g-600 text-sm max-w-sm leading-relaxed">
-        Entra no servidor, faça parte da comunidade portuguesa.
-      </p>
-      <a href="https://discord.com/invite/pG44r3G8ud"
-         class="font-pixel text-[9px] border-2 border-g-400 bg-g-800 text-g-400 px-8 py-4 hover:bg-g-400 hover:text-black transition-all animate-glow"
-         target="_blank">
-        ENTRAR NO DISCORD ▸
-      </a>
-    </div>
-  </section>
+    </section>
+
+    <!-- TUTORIALS -->
+    <section id="tutorials" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-20 sm:px-6">
+      <div class="mb-4">
+        <h2 class="text-xl font-semibold tracking-tight text-white">Tutoriais</h2>
+        <p class="mt-1 text-sm text-zinc-500">Guias em português, do básico ao avançado.</p>
+      </div>
+      <div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-800 bg-zinc-900/20 px-6 py-14 text-center">
+        <span class="rounded-full border border-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-400">Em breve</span>
+        <p class="text-sm text-zinc-500">Os primeiros tutoriais estão a caminho.</p>
+      </div>
+    </section>
+
+    <!-- DISCORD CTA -->
+    <section id="discord" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-24 sm:px-6">
+      <div class="relative overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/40">
+        <div class="flex h-0.5">
+          <div class="w-2/5 bg-pt-green"></div>
+          <div class="w-3/5 bg-pt-red"></div>
+        </div>
+        <div class="flex flex-col items-start gap-6 p-6 sm:p-10 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 class="text-2xl font-semibold tracking-tight text-white">Junta-te à comunidade</h2>
+            <p class="mt-2 max-w-md text-sm leading-6 text-zinc-400">
+              Entra no servidor de Discord, conhece outros runners portugueses e faz parte da comunidade.
+            </p>
+          </div>
+          <a href="https://discord.gg/C6WZs4Eq3n" target="_blank" rel="noopener"
+             class="inline-flex shrink-0 items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200">
+            <i class="bi bi-discord"></i>
+            Entrar no Discord
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <!-- FOOTER -->
-  <footer class="border-t-2 border-g-600 bg-g-900/60">
-    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <span>⛏️</span>
-        <div>
-          <div class="font-pixel text-[9px] text-g-400">MCSR PORTUGAL</div>
-          <div class="font-pixel text-[6px] text-g-600 mt-1">COMUNIDADE PORTUGUESA DE SPEEDRUN</div>
-        </div>
+  <footer class="border-t border-zinc-800">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div class="flex items-center gap-2.5">
+        <img src="assets/portugalmcsrlogo.png" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
+        <span class="text-zinc-400">MCSR Portugal <span class="text-zinc-600">· Comunidade portuguesa de speedrun</span></span>
       </div>
-      <div class="flex items-center gap-1">
-        <div class="w-3 h-5 bg-pt-green border border-g-800"></div>
-        <div class="w-4 h-5 bg-pt-red border border-g-800"></div>
-        <span class="font-pixel text-[6px] text-g-600 ml-2">PORTUGAL 🇵🇹</span>
-      </div>
+      <a href="https://discord.gg/C6WZs4Eq3n" target="_blank" rel="noopener" aria-label="Discord"
+         class="text-zinc-500 transition-colors hover:text-white">
+        <i class="bi bi-discord text-lg"></i>
+      </a>
     </div>
   </footer>
 
+<script>
+// Leaderboard preview: top 3 PT players from the MCSR Ranked API
+(async function loadPreview() {
+  const API  = 'https://api.mcsrranked.com';
+  const COLS = 'grid grid-cols-[2.5rem_1fr_5rem] items-center gap-3 px-4 py-3 sm:grid-cols-[3rem_1fr_7rem_5rem_4rem] sm:px-5';
+  const body = document.getElementById('preview-body');
+  const esc  = str => String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  try {
+    const res  = await fetch(`${API}/leaderboard?country=pt`);
+    const json = await res.json();
+    if (!res.ok || json.status !== 'success') throw new Error(json?.data?.message || res.status);
+
+    const top = (json.data?.users ?? []).slice(0, 3);
+    if (!top.length) throw new Error('Sem jogadores');
+
+    const profiles = await Promise.all(top.map(p =>
+      fetch(`${API}/users/${encodeURIComponent(p.nickname)}`)
+        .then(r => r.json()).then(j => j.status === 'success' ? j.data : null).catch(() => null)
+    ));
+
+    body.classList.remove('animate-pulse');
+    body.innerHTML = top.map((p, i) => {
+      const s      = profiles[i]?.statistics?.season;
+      const wins   = s?.wins?.ranked ?? null;
+      const loses  = s?.loses?.ranked ?? null;
+      const played = s?.playedMatches?.ranked ?? (wins!=null && loses!=null ? wins+loses : null);
+      const wr     = wins!=null && played ? `${(wins / played * 100).toFixed(1)}%` : '—';
+      const rankCls = ['text-amber-300', 'text-zinc-200', 'text-orange-400'][i];
+      const av     = `https://mc-heads.net/avatar/${encodeURIComponent(p.nickname)}/24`;
+      const fbAv   = `https://minotar.net/helm/${encodeURIComponent(p.nickname)}/24`;
+      return `
+      <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}?country=PT" target="_blank" rel="noopener"
+         class="${COLS} group text-sm transition-colors even:bg-zinc-900/30 hover:bg-zinc-900">
+        <span class="font-mono font-semibold tabular-nums ${rankCls}">${i + 1}</span>
+        <span class="flex min-w-0 items-center gap-3">
+          <img src="${av}" class="h-6 w-6 rounded-sm" style="image-rendering:pixelated" onerror="this.onerror=null;this.src='${fbAv}'" alt=""/>
+          <span class="truncate font-medium text-zinc-100 group-hover:text-white">${esc(p.nickname)}</span>
+        </span>
+        <span class="text-right font-mono font-semibold tabular-nums text-white">${p.eloRate ?? '—'}</span>
+        <span class="hidden text-right font-mono tabular-nums text-zinc-300 sm:block">${wins ?? '—'}</span>
+        <span class="hidden text-right font-mono tabular-nums text-zinc-300 sm:block">${wr}</span>
+      </a>`;
+    }).join('');
+  } catch (e) {
+    console.error(e);
+    body.classList.remove('animate-pulse');
+    body.innerHTML = `<div class="px-5 py-8 text-center text-sm text-zinc-500">Não foi possível carregar o ranking.</div>`;
+  }
+})();
+</script>
 </body>
 </html>
