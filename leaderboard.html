@@ -209,7 +209,11 @@ function renderTable() {
   const sorted = [...allPlayers].sort((a, b) => {
     if (sortKey === 'elo')      return sortAsc ? (a.eloRate??0)-(b.eloRate??0)            : (b.eloRate??0)-(a.eloRate??0);
     if (sortKey === 'winrate')  return sortAsc ? (a.winRate??-1)-(b.winRate??-1)          : (b.winRate??-1)-(a.winRate??-1);
-    if (sortKey === 'besttime') return sortAsc ? (b.bestTime??Infinity)-(a.bestTime??Infinity) : (a.bestTime??Infinity)-(b.bestTime??Infinity);
+    if (sortKey === 'besttime') {
+      // Players without a time always sink to the bottom, whatever the direction
+      if (a.bestTime == null || b.bestTime == null) return (a.bestTime == null) - (b.bestTime == null);
+      return sortAsc ? a.bestTime-b.bestTime : b.bestTime-a.bestTime;
+    }
     return 0;
   });
 
