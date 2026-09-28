@@ -35,8 +35,8 @@ const TORNEIOS = [
       // { label: 'Região',  value: 'Portugal' },
     ],
     links: [
-      { label: 'Mais info no Discord', url: 'https://discord.gg/C6WZs4Eq3n', icon: 'discord' },
       { label: 'Bracket', url: 'https://challonge.com/pt/s0ftaal6' },
+      { label: 'Mais info no Discord', url: 'https://discord.gg/C6WZs4Eq3n', icon: 'discord' },
     ],
   },
 ];
