@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCSR TV Portugal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            pt: { red: '#da291c', green: '#046a38' },
+          },
+        },
+      },
+    }
+  </script>
+  <style>[hidden] { display: none !important; }</style>
+</head>
+<body class="bg-zinc-950 text-zinc-300 font-sans antialiased min-h-screen">
+
+  <!-- Flag accent -->
+  <div class="flex h-0.5">
+    <div class="w-2/5 bg-pt-green"></div>
+    <div class="w-3/5 bg-pt-red"></div>
+  </div>
+
+  <!-- NAV -->
+  <header class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur">
+    <nav class="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 sm:px-6">
+      <div class="flex min-w-0 items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5">
+          <img src="assets/portugalmcsrlogo.png" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
+          <span class="hidden text-sm font-semibold tracking-tight text-white sm:inline">MCSR Portugal</span>
+        </a>
+        <span class="text-zinc-700">/</span>
+        <span class="truncate text-sm text-zinc-400">TV</span>
+      </div>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <a href="leaderboard.html"     class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">Ranking</a>
+        <a href="torneios.html"        class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white md:block">Torneios</a>
+        <a href="https://www.twitch.tv/mcsr_portugal" target="_blank" rel="noopener" aria-label="Twitch" title="Twitch"
+           class="rounded-md px-2 py-1.5 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"><i class="bi bi-twitch"></i></a>
+        <a href="https://www.youtube.com/@MCSR-Portugal" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"
+           class="rounded-md px-2 py-1.5 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"><i class="bi bi-youtube"></i></a>
+        <a href="https://discord.com/invite/pG44r3G8ud" target="_blank" rel="noopener"
+           class="ml-1 inline-flex items-center gap-2 rounded-md bg-white px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200">
+          <i class="bi bi-discord"></i>
+          <span>Discord</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <div id="test-banner" hidden class="border-b border-amber-500/30 bg-amber-500/10 px-4 py-2 text-center text-xs text-amber-300">
+    Modo de teste: a mostrar jogadores com o país <span id="test-country" class="font-mono uppercase"></span> em vez de Portugal.
+    <a href="tvmcsrpt.html" class="underline hover:text-amber-200">Voltar ao normal</a>
+  </div>
+
+  <main class="mx-auto max-w-screen-2xl px-4 pb-20 sm:px-6">
+
+    <!-- PAGE HEADER -->
+    <section class="flex flex-col gap-3 pb-6 pt-8 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">MCSR TV <span class="text-zinc-500">Portugal</span></h1>
+        <p class="mt-1 text-sm text-zinc-400">Partidas ranked em direto de jogadores portugueses.</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs text-zinc-500">
+        <span id="live-count" class="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 font-medium text-zinc-400">
+          <span class="h-1.5 w-1.5 rounded-full bg-zinc-600"></span>
+          A carregar…
+        </span>
+        <span id="status" class="tabular-nums"></span>
+      </div>
+    </section>
+
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+
+      <!-- FEATURED -->
+      <section aria-label="Partida em destaque" class="min-w-0">
+        <div class="relative aspect-video overflow-hidden rounded-lg border border-zinc-800 bg-black">
+          <iframe id="tw-player" class="absolute inset-0 h-full w-full" hidden
+                  allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Stream Twitch"></iframe>
+          <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
+            <i class="bi bi-broadcast text-2xl text-zinc-600"></i>
+            <p id="placeholder-text" class="text-sm text-zinc-400">A procurar partidas em direto…</p>
+            <p id="placeholder-sub" class="text-xs text-zinc-600"></p>
+          </div>
+        </div>
+
+        <div id="featured-info" class="mt-4"></div>
+      </section>
+
+      <!-- SIDEBAR -->
+      <aside class="min-w-0 space-y-8">
+        <section aria-label="Outras partidas em direto">
+          <h2 class="mb-3 text-sm font-semibold text-white">Outras partidas em direto</h2>
+          <div id="other-matches" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1"></div>
+        </section>
+
+        <section aria-label="Jogadores em partida sem stream">
+          <div class="mb-3">
+            <h2 class="text-sm font-semibold text-white">A jogar sem stream</h2>
+            <p class="mt-0.5 text-xs text-zinc-500">Jogadores portugueses em partida, sem direto na Twitch.</p>
+          </div>
+          <div id="off-stream" class="overflow-hidden rounded-lg border border-zinc-800"></div>
+        </section>
+      </aside>
+    </div>
+
+    <p class="mt-10 text-xs text-zinc-600">
+      Dados de <a href="https://mcsrranked.com" target="_blank" rel="noopener" class="text-zinc-500 hover:text-zinc-300">mcsrranked.com</a>,
+      atualizados a cada 15 segundos. Só aparecem streams de jogadores que ativaram a partilha do direto no MCSR Ranked.
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-zinc-800">
+    <div class="mx-auto flex max-w-screen-2xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div class="flex items-center gap-2.5">
+        <img src="assets/portugalmcsrlogo.png" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
+        <span class="text-zinc-400">MCSR Portugal <span class="text-zinc-600">· Comunidade portuguesa de speedrun</span></span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://www.twitch.tv/mcsr_portugal" target="_blank" rel="noopener" aria-label="Twitch"
+           class="text-zinc-500 transition-colors hover:text-white"><i class="bi bi-twitch text-lg"></i></a>
+        <a href="https://www.youtube.com/@MCSR-Portugal" target="_blank" rel="noopener" aria-label="YouTube"
+           class="text-zinc-500 transition-colors hover:text-white"><i class="bi bi-youtube text-lg"></i></a>
+        <a href="https://discord.com/invite/pG44r3G8ud" target="_blank" rel="noopener" aria-label="Discord"
+           class="text-zinc-500 transition-colors hover:text-white"><i class="bi bi-discord text-lg"></i></a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Live PT matches come from GET /live, which lists every ongoing ranked match with each
+// player's country and, per player, `liveUrl` (their Twitch URL, only set while they stream
+// with stream sharing enabled) and `timeline` (their latest split).
+const API     = 'https://api.mcsrranked.com';
+// ?country=us swaps the filter for testing when no PT players are live (see tvmcsrpt-test.html)
+const COUNTRY = (new URLSearchParams(location.search).get('country') || 'pt').toLowerCase();
+const POLL_MS = 15000;  // API caches /live for 5 s; limit is 500 req / 10 min per IP
+
+// Progress stages. Bastion and fortress share a stage: only the latest split is reported,
+// and runners take them in either order.
+const SPLITS = {
+  'story.enter_the_nether':           { stage: 1, label: 'Nether' },
+  'nether.find_bastion':              { stage: 2, label: 'Bastião' },
+  'nether.find_fortress':             { stage: 2, label: 'Fortaleza' },
+  'projectelo.timeline.blind_travel': { stage: 3, label: 'Blind' },
+  'story.follow_ender_eye':           { stage: 4, label: 'Stronghold' },
+  'story.enter_the_end':              { stage: 5, label: 'End' },
+};
+const STAGE_COUNT = 5;
+
+// ── State ──────────────────────────────────────────────────────────────────
+let liveMatches = [];     // matches with at least one PT player streaming
+let offStream   = [];     // { player, match } for PT players in a match without a stream
+let fetchedAt   = 0;      // Date.now() of the last successful /live response
+let featuredKey = null;   // key of the featured match
+let featuredPov = null;   // uuid of the player whose stream is embedded
+let lastError   = null;
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function esc(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function fmt(ms) {
+  if (ms == null) return null;
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(s / 3600);
+  const mm = String(Math.floor(s / 60) % 60).padStart(2, '0');
+  const ss = String(s % 60).padStart(2, '0');
+  return h ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
+}
+function twitchLogin(url) {
+  const m = /twitch\.tv\/([A-Za-z0-9_]{1,25})/i.exec(url ?? '');
+  return m ? m[1].toLowerCase() : null;
+}
+function avatar(nick, size) {
+  const n = encodeURIComponent(nick);
+  return `<img src="https://mc-heads.net/avatar/${n}/${size}" data-fallback="https://minotar.net/helm/${n}/${size}"
+               class="shrink-0 rounded-sm" style="width:${size}px;height:${size}px;image-rendering:pixelated" loading="lazy" alt=""/>`;
+}
+function countryTag(p) {
+  if (p.country === COUNTRY) {
+    return `<span class="rounded-sm border border-pt-green/50 px-1 text-[10px] font-semibold uppercase leading-4 text-emerald-400">${esc(COUNTRY)}</span>`;
+  }
+  return p.country
+    ? `<span class="rounded-sm border border-zinc-800 px-1 text-[10px] font-medium uppercase leading-4 text-zinc-500">${esc(p.country)}</span>`
+    : '';
+}
+function splitInfo(p) {
+  const s = p.split && SPLITS[p.split.type];
+  return s ? { ...s, time: p.split.time } : { stage: 0, label: 'Overworld', time: null };
+}
+// Match clock keeps running between polls
+function timerSpan(match, cls = '') {
+  return `<span class="font-mono tabular-nums ${cls}" data-timer="${match.currentTime}">${fmt(match.currentTime)}</span>`;
+}
+function bestPtElo(m) {
+  return Math.max(...m.players.filter(p => p.country === COUNTRY && p.twitch).map(p => p.eloRate ?? 0));
+}
+
+// Minecraft head services occasionally fail; swap to the fallback once
+document.addEventListener('error', e => {
+  const img = e.target;
+  if (img.tagName === 'IMG' && img.dataset.fallback) {
+    img.src = img.dataset.fallback;
+    delete img.dataset.fallback;
+  }
+}, true);
+
+// ── Data ───────────────────────────────────────────────────────────────────
+function normalize(raw) {
+  const players = (raw.players ?? []).map(p => {
+    const d = raw.data?.[p.uuid] ?? {};
+    return {
+      uuid: p.uuid, nickname: p.nickname, country: p.country,
+      eloRate: p.eloRate, eloRank: p.eloRank,
+      twitch: twitchLogin(d.liveUrl),
+      split: d.timeline ?? null,
+    };
+  }).sort((a, b) => (b.country === COUNTRY) - (a.country === COUNTRY));
+  return { key: players.map(p => p.uuid).sort().join('-'), currentTime: raw.currentTime ?? 0, players };
+}
+
+async function poll() {
+  try {
+    // The API sends `cache-control: max-age=14400`; without no-store the browser would
+    // answer every poll from its HTTP cache and the page would freeze on the first response.
+    const res  = await fetch(`${API}/live`, { cache: 'no-store' });
+    const json = await res.json();
+    if (!res.ok || json.status !== 'success') throw new Error(json?.data?.message || `HTTP ${res.status}`);
+
+    const matches = (json.data?.liveMatches ?? []).map(normalize)
+      .filter(m => m.players.some(p => p.country === COUNTRY));
+
+    liveMatches = matches
+      .filter(m => m.players.some(p => p.country === COUNTRY && p.twitch))
+      .sort((a, b) => bestPtElo(b) - bestPtElo(a));
+    offStream = matches.flatMap(m => m.players
+      .filter(p => p.country === COUNTRY && !p.twitch)
+      .map(player => ({ player, match: m })));
+    fetchedAt = Date.now();
+    lastError = null;
+  } catch (e) {
+    lastError = e.message;
+    console.error(e);
+  }
+  render();
+}
+
+// ── Featured selection ─────────────────────────────────────────────────────
+// The URL hash holds the nickname being watched, so a link follows that player into
+// their next match, and the page re-features them when they come back live.
+function selectFeatured() {
+  const wanted = decodeURIComponent(location.hash.slice(1)).toLowerCase();
+  const match = liveMatches.find(m => m.key === featuredKey)
+             || (wanted && liveMatches.find(m => m.players.some(p => p.twitch && p.nickname.toLowerCase() === wanted)))
+             || liveMatches[0]
+             || null;
+
+  featuredKey = match?.key ?? null;
+  if (!match) { featuredPov = null; return null; }
+
+  if (!match.players.some(p => p.uuid === featuredPov && p.twitch)) {
+    const byHash = match.players.find(p => p.twitch && p.nickname.toLowerCase() === wanted);
+    featuredPov = (byHash ?? match.players.find(p => p.country === COUNTRY && p.twitch)).uuid;
+  }
+  return match;
+}
+
+function feature(key, pov) {
+  const match = liveMatches.find(m => m.key === key);
+  if (!match) return;
+  featuredKey = key;
+  featuredPov = pov ?? match.players.find(p => p.country === COUNTRY && p.twitch).uuid;
+  const nick = match.players.find(p => p.uuid === featuredPov).nickname;
+  history.replaceState(null, '', `#${encodeURIComponent(nick)}`);
+  render();
+  if (window.innerWidth < 1024) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Rendering ──────────────────────────────────────────────────────────────
+const player      = document.getElementById('tw-player');
+const placeholder = document.getElementById('player-placeholder');
+
+function setStream(login) {
+  // Twitch's embed refuses to load without a real parent domain (e.g. from file://)
+  if (login && !location.hostname) {
+    player.hidden = true; player.removeAttribute('src'); player.dataset.channel = '';
+    placeholder.hidden = false;
+    document.getElementById('placeholder-text').textContent = 'O player da Twitch precisa de um servidor web.';
+    document.getElementById('placeholder-sub').innerHTML =
+      `Abre esta página através de http(s), ou vê em <a class="text-zinc-400 underline" target="_blank" rel="noopener" href="https://twitch.tv/${esc(login)}">twitch.tv/${esc(login)}</a>.`;
+    return;
+  }
+  if (!login) {
+    player.hidden = true; player.removeAttribute('src'); player.dataset.channel = '';
+    placeholder.hidden = false;
+    return;
+  }
+  if (player.dataset.channel === login) return;  // don't reload the stream on every poll
+  player.dataset.channel = login;
+  player.src = `https://player.twitch.tv/?channel=${encodeURIComponent(login)}&parent=${encodeURIComponent(location.hostname)}&autoplay=true&muted=false`;
+  player.hidden = false;
+  placeholder.hidden = true;
+}
+
+function progressBar(stage) {
+  return `<div class="flex gap-1">${Array.from({ length: STAGE_COUNT }, (_, i) =>
+    `<span class="h-1 flex-1 rounded-full ${i < stage ? 'bg-zinc-300' : 'bg-zinc-800'}"></span>`).join('')}</div>`;
+}
+
+function renderFeatured(match) {
+  const box = document.getElementById('featured-info');
+  if (!match) {
+    setStream(null);
+    document.getElementById('placeholder-text').textContent = lastError && !fetchedAt
+      ? 'Não foi possível contactar a API do MCSR Ranked.'
+      : 'Nenhum jogador português em direto neste momento.';
+    document.getElementById('placeholder-sub').textContent = fetchedAt ? 'A página atualiza automaticamente.' : '';
+    box.innerHTML = '';
+    return;
+  }
+
+  const pov = match.players.find(p => p.uuid === featuredPov);
+  setStream(pov.twitch);
+
+  const cards = match.players.map(p => {
+    const s = splitInfo(p);
+    const watching = p.uuid === featuredPov;
+    const povBtn = !p.twitch
+      ? `<span class="inline-flex items-center gap-1.5 text-xs text-zinc-600"><i class="bi bi-camera-video-off"></i>Sem stream</span>`
+      : watching
+        ? `<span class="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-200"><span class="h-1.5 w-1.5 rounded-full bg-pt-red"></span>A ver</span>`
+        : `<button type="button" data-key="${esc(match.key)}" data-pov="${esc(p.uuid)}"
+                   class="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 px-2 py-1 text-xs text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white">
+             <i class="bi bi-eye"></i>Ver POV</button>`;
+    return `
+      <div class="rounded-lg border ${watching ? 'border-zinc-700 bg-zinc-900/60' : 'border-zinc-800 bg-zinc-900/30'} p-4">
+        <div class="flex items-center gap-3">
+          ${avatar(p.nickname, 36)}
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+              <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}" target="_blank" rel="noopener"
+                 class="truncate font-semibold text-zinc-100 hover:text-white">${esc(p.nickname)}</a>
+              ${countryTag(p)}
+            </div>
+            <div class="mt-0.5 font-mono text-xs tabular-nums text-zinc-500">
+              ${p.eloRate ?? '—'} elo${p.eloRank ? ` · #${p.eloRank}` : ''}
+            </div>
+          </div>
+          ${povBtn}
+        </div>
+        <div class="mt-4 flex items-baseline justify-between text-sm">
+          <span class="text-zinc-300">${s.label}</span>
+          <span class="font-mono text-xs tabular-nums text-zinc-500">${fmt(s.time) ?? ''}</span>
+        </div>
+        <div class="mt-2">${progressBar(s.stage)}</div>
+      </div>`;
+  }).join('');
+
+  box.innerHTML = `
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 rounded-sm bg-pt-red px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">Ao vivo</span>
+        <span class="text-sm text-zinc-400">Partida ranked</span>
+        ${timerSpan(match, 'text-lg font-semibold text-white')}
+      </div>
+      <a href="https://twitch.tv/${esc(pov.twitch)}" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-sm text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white">
+        <i class="bi bi-twitch"></i>Abrir na Twitch
+      </a>
+    </div>
+    <div class="mt-4 grid gap-3 md:grid-cols-2">${cards}</div>`;
+}
+
+function renderOthers(featured) {
+  const el = document.getElementById('other-matches');
+  const others = liveMatches.filter(m => m !== featured);
+  if (!others.length) {
+    el.innerHTML = `<p class="rounded-lg border border-dashed border-zinc-800 px-4 py-6 text-center text-xs text-zinc-500">
+      ${featured ? 'Sem outras partidas em direto.' : 'Sem partidas em direto.'}</p>`;
+    return;
+  }
+  // Twitch preview thumbnails, refreshed at most once a minute
+  const bust = Math.floor(Date.now() / 60000);
+  el.innerHTML = others.map(m => {
+    const pt = m.players.find(p => p.country === COUNTRY && p.twitch);
+    const rows = m.players.map(p => {
+      const s = splitInfo(p);
+      return `
+        <div class="flex items-center gap-2 text-sm">
+          ${avatar(p.nickname, 16)}
+          <span class="min-w-0 truncate ${p.country === COUNTRY ? 'text-zinc-100' : 'text-zinc-400'}">${esc(p.nickname)}</span>
+          ${p.country === COUNTRY ? '<span class="h-1 w-1 shrink-0 rounded-full bg-pt-green" title="Portugal"></span>' : ''}
+          <span class="ml-auto shrink-0 text-xs text-zinc-500">${s.label}</span>
+          <span class="w-10 shrink-0 text-right font-mono text-xs tabular-nums text-zinc-500">${p.eloRate ?? '—'}</span>
+        </div>`;
+    }).join('');
+    return `
+      <button type="button" data-key="${esc(m.key)}"
+              class="group block w-full overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/30 text-left transition-colors hover:border-zinc-700 hover:bg-zinc-900/60">
+        <div class="relative aspect-video bg-zinc-900">
+          <img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_${esc(pt.twitch)}-440x248.jpg?t=${bust}"
+               class="h-full w-full object-cover" loading="lazy" alt=""/>
+          <span class="absolute left-2 top-2 rounded-sm bg-pt-red px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">Ao vivo</span>
+          <span class="absolute bottom-2 right-2 rounded-sm bg-black/75 px-1.5 py-0.5 text-xs text-zinc-100">${timerSpan(m)}</span>
+        </div>
+        <div class="space-y-1.5 p-3">${rows}</div>
+      </button>`;
+  }).join('');
+}
+
+function renderOffStream() {
+  const el = document.getElementById('off-stream');
+  if (!offStream.length) {
+    el.innerHTML = `<p class="px-4 py-5 text-center text-xs text-zinc-500">Ninguém.</p>`;
+    return;
+  }
+  el.innerHTML = offStream.map(({ player: p, match }) => `
+    <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}" target="_blank" rel="noopener"
+       class="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors even:bg-zinc-900/30 hover:bg-zinc-900">
+      ${avatar(p.nickname, 20)}
+      <span class="min-w-0 flex-1 truncate text-zinc-200">${esc(p.nickname)}</span>
+      <span class="shrink-0 text-xs text-zinc-500">${splitInfo(p).label}</span>
+      ${timerSpan(match, 'w-12 shrink-0 text-right text-xs text-zinc-500')}
+    </a>`).join('');
+}
+
+function renderHeader() {
+  const n = liveMatches.length;
+  document.getElementById('live-count').innerHTML = `
+    <span class="h-1.5 w-1.5 rounded-full ${n ? 'bg-pt-red' : 'bg-zinc-600'}"></span>
+    ${n === 1 ? '1 partida em direto' : `${n} partidas em direto`}`;
+}
+
+function render() {
+  const featured = selectFeatured();
+  renderFeatured(featured);
+  renderOthers(featured);
+  renderOffStream();
+  renderHeader();
+  tick();
+}
+
+// Advance match clocks and the "updated" label between polls
+function tick() {
+  const elapsed = fetchedAt ? Date.now() - fetchedAt : 0;
+  document.querySelectorAll('[data-timer]').forEach(el => {
+    el.textContent = fmt(Number(el.dataset.timer) + elapsed);
+  });
+  const status = document.getElementById('status');
+  if (lastError) {
+    status.className = 'tabular-nums text-red-400';
+    status.textContent = 'Erro ao atualizar';
+    status.title = lastError;
+  } else if (fetchedAt) {
+    status.className = 'tabular-nums';
+    status.textContent = `Atualizado há ${Math.floor(elapsed / 1000)} s`;
+    status.title = '';
+  }
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-key]');
+  if (btn) feature(btn.dataset.key, btn.dataset.pov);
+});
+
+// ── Polling (paused while the tab is hidden) ───────────────────────────────
+let pollTimer = null;
+function startPolling() {
+  clearInterval(pollTimer);
+  poll();
+  pollTimer = setInterval(poll, POLL_MS);
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) clearInterval(pollTimer);
+  else startPolling();
+});
+if (COUNTRY !== 'pt') {
+  document.getElementById('test-country').textContent = COUNTRY;
+  document.getElementById('test-banner').hidden = false;
+}
+setInterval(tick, 1000);
+startPolling();
+</script>
+</body>
+</html>
