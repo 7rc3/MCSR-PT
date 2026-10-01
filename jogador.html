@@ -153,6 +153,15 @@
     </div>
   </main>
 
+  <!-- MATCH SPLITS POPUP -->
+  <dialog id="match-dialog" class="w-[calc(100%-2rem)] max-w-xl rounded-xl border border-zinc-800 bg-zinc-950 p-0 text-zinc-300 shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm">
+    <div class="flex items-center justify-between border-b border-zinc-800 px-5 py-3">
+      <div id="md-title" class="min-w-0 truncate text-sm font-semibold text-white">Partida</div>
+      <button type="button" id="md-close" aria-label="Fechar" class="rounded-md px-2 py-1 text-zinc-500 transition-colors hover:bg-zinc-900 hover:text-white"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div id="md-body"></div>
+  </dialog>
+
   <!-- FOOTER -->
   <footer class="border-t border-zinc-800">
     <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -345,7 +354,8 @@ function renderMatches(rows) {
     const ch = r.change == null ? '' :
       `<span class="${r.change > 0 ? 'text-emerald-400' : r.change < 0 ? 'text-red-400' : 'text-zinc-500'}">${r.change > 0 ? '+' : ''}${r.change}</span>`;
     return `
-    <div class="grid grid-cols-[1.75rem_1fr_3.5rem_2.5rem] items-center gap-3 px-4 py-2.5 text-sm even:bg-zinc-900/30 sm:grid-cols-[1.75rem_1fr_9rem_3.5rem_2.5rem_4.5rem] sm:px-5">
+    <div data-match="${r.id}" role="button" tabindex="0" title="Ver splits"
+         class="grid cursor-pointer grid-cols-[1.75rem_1fr_3.5rem_2.5rem] items-center gap-3 px-4 py-2.5 text-sm transition-colors even:bg-zinc-900/30 hover:bg-zinc-900 focus:bg-zinc-900 focus:outline-none sm:grid-cols-[1.75rem_1fr_9rem_3.5rem_2.5rem_4.5rem] sm:px-5">
       <span class="flex h-6 w-6 items-center justify-center rounded border font-mono text-xs font-semibold ${o.cls}">${o.label}</span>
       <span class="flex min-w-0 items-center gap-2">
         ${r.opp.nickname ? avatar(r.opp.nickname, 20) : ''}
@@ -363,6 +373,140 @@ function renderMatches(rows) {
     </div>`;
   }).join('');
 }
+
+// ── Match splits popup ─────────────────────────────────────────────────────
+// Advancement names in /matches/{id} timelines (same candidates as SPLITS_DEF in mcsr-splits-overlay.html)
+const SPLITS = [
+  { label: 'Nether',        keys: ['story.enter_the_nether', 'enter_nether', 'nether'] },
+  { label: 'Bastião',       keys: ['nether.find_bastion', 'enter_bastion', 'bastion'] },
+  { label: 'Fortaleza',     keys: ['nether.find_fortress', 'enter_fortress', 'fortress'] },
+  { label: 'Blind travel',  keys: ['projectelo.timeline.blind_travel', 'find_stronghold', 'first_portal'] },
+  { label: 'Stronghold',    keys: ['story.follow_ender_eye', 'enter_stronghold', 'stronghold'] },
+  { label: 'End',           keys: ['story.enter_the_end', 'end.root', 'enter_end', 'end'] },
+];
+
+let ME = null;               // { uuid, nickname } of the profile being viewed
+const matchCache = new Map(); // match id → Promise of /matches/{id}
+
+function fmtDelta(ms) {
+  return `${ms >= 0 ? '+' : '−'}${fmt(Math.abs(ms))}`;
+}
+
+// Earliest time of each timeline event for one player, plus death count
+function playerTimeline(match, uuid) {
+  const t = {};
+  let deaths = 0;
+  for (const e of match.timelines ?? []) {
+    if (e.uuid !== uuid) continue;
+    if (e.type === 'projectelo.timeline.death') deaths++;
+    if (t[e.type] == null || e.time < t[e.type]) t[e.type] = e.time;
+  }
+  return { at: keys => keys.map(k => t[k]).find(v => v != null) ?? null, deaths, forfeit: t['projectelo.timeline.forfeit'] ?? null };
+}
+
+function renderSplits(m) {
+  const me  = m.players.find(p => p.uuid === ME.uuid) ?? m.players[0];
+  const opp = m.players.find(p => p !== me) ?? {};
+  const tl  = { me: playerTimeline(m, me.uuid), opp: playerTimeline(m, opp.uuid) };
+  const done = uuid => m.completions?.find(c => c.uuid === uuid)?.time ?? null;
+  const winner = m.result?.uuid;
+  const change = uuid => m.changes?.find(c => c.uuid === uuid)?.change;
+
+  const rows = SPLITS.map(s => ({ label: s.label, a: tl.me.at(s.keys), b: tl.opp.at(s.keys) }));
+  rows.push({ label: 'Final', a: done(me.uuid), b: done(opp.uuid), final: true });
+
+  const date = new Date(m.date * 1000).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' });
+  document.getElementById('md-title').innerHTML =
+    `Partida <span class="font-mono text-zinc-500">#${m.id}</span> <span class="font-normal text-zinc-500">· ${date}</span>`;
+
+  const head = (p, side) => {
+    const ch  = change(p.uuid);
+    const won = winner && winner === p.uuid;
+    const t   = tl[side];
+    return `
+    <div class="flex min-w-0 items-center gap-3 ${side === 'opp' ? 'flex-row-reverse text-right' : ''}">
+      ${p.nickname ? avatar(p.nickname, 40) : ''}
+      <div class="min-w-0">
+        <div class="flex items-center gap-1.5 ${side === 'opp' ? 'flex-row-reverse' : ''}">
+          ${p.nickname && side === 'opp' ? `<a href="${profileUrl(p.nickname)}" class="truncate font-semibold text-zinc-100 hover:text-white">${esc(p.nickname)}</a>`
+                                          : `<span class="truncate font-semibold text-zinc-100">${esc(p.nickname ?? '—')}</span>`}
+          ${countryTag(p.country)}
+        </div>
+        <div class="mt-0.5 font-mono text-xs tabular-nums text-zinc-500">
+          ${p.eloRate ?? '—'}${ch != null ? ` <span class="${ch > 0 ? 'text-emerald-400' : ch < 0 ? 'text-red-400' : ''}">${ch > 0 ? '+' : ''}${ch}</span>` : ''}
+        </div>
+        <div class="mt-1 text-[11px] ${won ? 'font-semibold text-emerald-400' : 'text-zinc-500'}">
+          ${won ? 'Vitória' : t.forfeit != null ? `Desistiu aos ${fmt(t.forfeit)}` : winner ? 'Derrota' : 'Empate'}${t.deaths ? ` · ${t.deaths} morte${t.deaths > 1 ? 's' : ''}` : ''}
+        </div>
+      </div>
+    </div>`;
+  };
+
+  // Faster side gets the delta and the highlight
+  const cell = (t, other, alignRight) => {
+    const ahead = t != null && (other == null || t < other);
+    const delta = t != null && other != null && t !== other ? fmtDelta(t - other) : '';
+    return `
+      <div class="flex items-baseline gap-2 ${alignRight ? 'flex-row-reverse' : ''}">
+        <span class="font-mono tabular-nums ${t == null ? 'text-zinc-700' : ahead ? 'font-semibold text-white' : 'text-zinc-400'}">${t != null ? fmt(t) : '—'}</span>
+        <span class="font-mono text-[11px] tabular-nums ${ahead ? 'text-emerald-400' : 'text-red-400/80'}">${delta}</span>
+      </div>`;
+  };
+
+  const seed = [m.seedType, m.bastionType].filter(Boolean).map(t => t.replaceAll('_', ' ').toLowerCase()).join(' · ');
+  const hasSplits = rows.some(r => r.a != null || r.b != null);
+
+  document.getElementById('md-body').innerHTML = `
+    <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-5 py-4">
+      ${head(me, 'me')}
+      <span class="text-xs font-medium uppercase tracking-wider text-zinc-600">vs</span>
+      ${head(opp, 'opp')}
+    </div>
+    ${seed ? `<div class="flex justify-center px-5 pb-3"><span class="rounded-full border border-zinc-800 bg-zinc-900/60 px-2.5 py-0.5 text-xs capitalize text-zinc-400">${esc(seed)}</span></div>` : ''}
+    <div class="border-t border-zinc-800">
+      ${hasSplits ? rows.map(r => `
+        <div class="grid grid-cols-[1fr_7rem_1fr] items-center gap-2 px-5 py-2.5 text-sm odd:bg-zinc-900/30 ${r.final ? 'border-t border-zinc-800' : ''}">
+          ${cell(r.a, r.b, false)}
+          <span class="text-center text-xs font-medium uppercase tracking-wider ${r.final ? 'text-zinc-300' : 'text-zinc-500'}">${r.label}</span>
+          ${cell(r.b, r.a, true)}
+        </div>`).join('')
+      : `<p class="px-5 py-10 text-center text-sm text-zinc-500">Esta partida não tem splits registados.</p>`}
+    </div>`;
+}
+
+async function openMatch(id) {
+  const dlg = document.getElementById('match-dialog');
+  document.getElementById('md-title').innerHTML = `Partida <span class="font-mono text-zinc-500">#${id}</span>`;
+  document.getElementById('md-body').innerHTML =
+    `<div class="flex items-center justify-center gap-2 px-5 py-16 text-sm text-zinc-500"><i class="bi bi-arrow-repeat animate-spin"></i>A carregar splits…</div>`;
+  if (!dlg.open) dlg.showModal();
+
+  if (!matchCache.has(id)) matchCache.set(id, get(`/matches/${id}`));
+  try {
+    const m = await matchCache.get(id);
+    if (dlg.open) renderSplits(m);
+  } catch (e) {
+    matchCache.delete(id);
+    document.getElementById('md-body').innerHTML =
+      `<p class="px-5 py-12 text-center text-sm text-red-400">Não foi possível carregar a partida.<br><span class="font-mono text-xs text-zinc-500">${esc(e.message)}</span></p>`;
+  }
+}
+
+const matchesEl = document.getElementById('matches');
+matchesEl.addEventListener('click', e => {
+  if (e.target.closest('a')) return; // opponent profile link
+  const row = e.target.closest('[data-match]');
+  if (row) openMatch(+row.dataset.match);
+});
+matchesEl.addEventListener('keydown', e => {
+  const row = e.target.closest('[data-match]');
+  if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openMatch(+row.dataset.match); }
+});
+
+const dialog = document.getElementById('match-dialog');
+document.getElementById('md-close').addEventListener('click', () => dialog.close());
+// Click on the backdrop (outside the panel) closes it
+dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
 
 // ── ELO chart (inline SVG, sized to the container) ─────────────────────────
 let chartPoints = [];
@@ -480,6 +624,7 @@ async function main() {
     ]);
 
     renderHeader(user);
+    ME = { uuid: user.uuid, nickname: user.nickname };
     const rows = matches.map(m => toRow(m, user.uuid));
     // The API caps a page at 100 matches, so long seasons only show the latest ones
     document.getElementById('chart-season').textContent =
