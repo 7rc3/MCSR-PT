@@ -293,7 +293,7 @@ function renderHeader(u) {
     ['Win streak', r('currentWinStreak') ?? '—', `Máximo: ${r('highestWinStreak') ?? '—'}`],
     ['Forfeits', r('forfeits') ?? '—', played ? `${((r('forfeits') ?? 0) / played * 100).toFixed(0)}% das partidas` : ''],
     ['Tempo de jogo', r('playtime') ? hours(r('playtime')) : '—', 'Em ranked esta season'],
-    ['Peak ELO', u.seasonResult?.highest ?? '—', u.seasonResult?.lowest != null ? `Mínimo: ${u.seasonResult.lowest}` : ''],
+    ['Peak ELO', u.seasonResult?.highest ?? '—', u.seasonResult?.lowest != null ? `Lowest: ${u.seasonResult.lowest}` : ''],
   ];
   document.getElementById('stats').innerHTML = cards.map(([label, value, sub]) => `
     <div class="rounded-lg border border-zinc-800 bg-zinc-900/30 p-4">
