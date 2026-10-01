@@ -353,7 +353,7 @@ function renderFeatured(match) {
           ${avatar(p.nickname, 36)}
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2">
-              <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}" target="_blank" rel="noopener"
+              <a href="jogador.html?u=${encodeURIComponent(p.nickname)}" target="_blank" rel="noopener"
                  class="truncate font-semibold text-zinc-100 hover:text-white">${esc(p.nickname)}</a>
               ${countryTag(p)}
             </div>
@@ -430,7 +430,7 @@ function renderOffStream() {
     return;
   }
   el.innerHTML = offStream.map(({ player: p, match }) => `
-    <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}" target="_blank" rel="noopener"
+    <a href="jogador.html?u=${encodeURIComponent(p.nickname)}" target="_blank" rel="noopener"
        class="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors even:bg-zinc-900/30 hover:bg-zinc-900">
       ${avatar(p.nickname, 20)}
       <span class="min-w-0 flex-1 truncate text-zinc-200">${esc(p.nickname)}</span>

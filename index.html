@@ -272,7 +272,7 @@
       const av     = `https://mc-heads.net/avatar/${encodeURIComponent(p.nickname)}/24`;
       const fbAv   = `https://minotar.net/helm/${encodeURIComponent(p.nickname)}/24`;
       return `
-      <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}?country=PT" target="_blank" rel="noopener"
+      <a href="jogador.html?u=${encodeURIComponent(p.nickname)}"
          class="${COLS} group text-sm transition-colors even:bg-zinc-900/30 hover:bg-zinc-900">
         <span class="font-mono font-semibold tabular-nums ${rankCls}">${i + 1}</span>
         <span class="flex min-w-0 items-center gap-3">

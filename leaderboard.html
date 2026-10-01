@@ -250,14 +250,14 @@ function renderTable() {
       : `<span class="text-xs text-zinc-600">—</span>`;
 
     return `
-    <a href="https://mcsrranked.com/stats/${encodeURIComponent(p.nickname)}?country=PT" target="_blank" rel="noopener"
+    <a href="jogador.html?u=${encodeURIComponent(p.nickname)}"
        class="${ROW_COLS} group text-sm transition-colors even:bg-zinc-900/30 hover:bg-zinc-900">
       <span class="font-mono text-sm font-semibold tabular-nums ${rankCls}">${rankLbl}</span>
       <img src="${av}" class="h-6 w-6 rounded-sm" style="image-rendering:pixelated" loading="lazy"
            onerror="this.onerror=null;this.src='${fbAv}'" alt=""/>
       <span class="flex min-w-0 items-center gap-2">
         <span class="truncate font-medium text-zinc-100 group-hover:text-white">${nick}</span>
-        <i class="bi bi-box-arrow-up-right hidden text-[10px] text-zinc-600 group-hover:inline"></i>
+        <i class="bi bi-chevron-right hidden text-[10px] text-zinc-600 group-hover:inline"></i>
       </span>
       <span class="hidden md:block">${badge}</span>
       <span class="text-right font-mono font-semibold tabular-nums" style="${eloStyle}" title="${rank?.name ?? ''}">${p.eloRate??'—'}</span>

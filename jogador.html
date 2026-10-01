@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogador — MCSR Portugal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            pt: { red: '#da291c', green: '#046a38' },
+          },
+        },
+      },
+    }
+  </script>
+  <style>[hidden] { display: none !important; }</style>
+</head>
+<body class="bg-zinc-950 text-zinc-300 font-sans antialiased min-h-screen">
+
+  <!-- Flag accent -->
+  <div class="flex h-0.5">
+    <div class="w-2/5 bg-pt-green"></div>
+    <div class="w-3/5 bg-pt-red"></div>
+  </div>
+
+  <!-- NAV -->
+  <header class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur">
+    <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div class="flex min-w-0 items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5">
+          <img src="assets/portugalmcsrlogo.png" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
+          <span class="hidden text-sm font-semibold tracking-tight text-white sm:inline">MCSR Portugal</span>
+        </a>
+        <span class="text-zinc-700">/</span>
+        <a href="leaderboard.html" class="hidden text-sm text-zinc-400 hover:text-white sm:inline">Leaderboard</a>
+        <span class="hidden text-zinc-700 sm:inline">/</span>
+        <span id="crumb" class="truncate text-sm text-zinc-400">Jogador</span>
+      </div>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <a href="tvmcsrpt.html"        class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">TV</a>
+        <a href="torneios.html"        class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white md:block">Torneios</a>
+        <a href="index.html#ranks"     class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">Ranking</a>
+        <a href="index.html#tutorials" class="hidden rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white sm:block">Tutoriais</a>
+        <a href="https://www.twitch.tv/mcsr_portugal" target="_blank" rel="noopener" aria-label="Twitch" title="Twitch"
+           class="rounded-md px-2 py-1.5 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"><i class="bi bi-twitch"></i></a>
+        <a href="https://www.youtube.com/@MCSR-Portugal" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"
+           class="rounded-md px-2 py-1.5 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"><i class="bi bi-youtube"></i></a>
+        <a href="https://discord.com/invite/pG44r3G8ud" target="_blank" rel="noopener"
+           class="ml-1 inline-flex items-center gap-2 rounded-md bg-white px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200">
+          <i class="bi bi-discord"></i>
+          <span>Discord</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+
+    <!-- LOADING SKELETON -->
+    <div id="skeleton" class="animate-pulse pt-10 sm:pt-14">
+      <div class="flex items-center gap-5">
+        <div class="h-20 w-20 rounded-md bg-zinc-800"></div>
+        <div class="space-y-3">
+          <div class="h-6 w-48 rounded bg-zinc-800"></div>
+          <div class="h-3 w-32 rounded bg-zinc-800"></div>
+        </div>
+      </div>
+      <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div class="h-20 rounded-lg bg-zinc-900"></div><div class="h-20 rounded-lg bg-zinc-900"></div>
+        <div class="h-20 rounded-lg bg-zinc-900"></div><div class="h-20 rounded-lg bg-zinc-900"></div>
+      </div>
+      <div class="mt-6 h-64 rounded-lg bg-zinc-900"></div>
+    </div>
+
+    <!-- NOT FOUND / ERROR -->
+    <section id="error" hidden class="mx-auto max-w-md pt-20 text-center">
+      <i class="bi bi-person-x text-3xl text-zinc-600"></i>
+      <h1 id="error-title" class="mt-3 text-xl font-semibold text-white">Jogador não encontrado</h1>
+      <p id="error-msg" class="mt-1 text-sm text-zinc-500"></p>
+      <form id="search" class="mt-6 flex gap-2">
+        <input name="u" required placeholder="Nickname do Minecraft" autocomplete="off"
+               class="min-w-0 flex-1 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-zinc-600" />
+        <button class="rounded-md bg-white px-4 py-2 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200">Procurar</button>
+      </form>
+    </section>
+
+    <div id="profile" hidden>
+
+      <!-- PLAYER HEADER -->
+      <section class="flex flex-col gap-6 pb-8 pt-10 sm:flex-row sm:items-end sm:justify-between sm:pt-14">
+        <div class="flex items-center gap-5">
+          <img id="p-avatar" class="h-20 w-20 shrink-0 rounded-md" style="image-rendering:pixelated" alt="" />
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 id="p-nick" class="truncate text-3xl font-bold tracking-tight text-white sm:text-4xl"></h1>
+              <span id="p-country"></span>
+            </div>
+            <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
+              <span id="p-badge"></span>
+              <span id="p-elo" class="font-mono font-semibold tabular-nums"></span>
+              <span id="p-rank" class="font-mono text-zinc-500"></span>
+            </div>
+            <p id="p-last" class="mt-1.5 text-xs text-zinc-500"></p>
+          </div>
+        </div>
+        <div id="p-links" class="flex flex-wrap items-center gap-2"></div>
+      </section>
+
+      <!-- STAT CARDS -->
+      <section id="stats" class="grid grid-cols-2 gap-3 sm:grid-cols-4"></section>
+
+      <!-- ELO CHART -->
+      <section class="mt-6 rounded-lg border border-zinc-800 bg-zinc-900/30">
+        <div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3 sm:px-5">
+          <h2 class="text-sm font-semibold text-white">Evolução de ELO <span id="chart-season" class="font-normal text-zinc-500"></span></h2>
+          <span id="chart-range" class="font-mono text-xs text-zinc-500"></span>
+        </div>
+        <div id="chart" class="relative px-2 py-4 sm:px-4"></div>
+      </section>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_20rem]">
+
+        <!-- RECENT MATCHES -->
+        <section class="overflow-hidden rounded-lg border border-zinc-800">
+          <div class="border-b border-zinc-800 bg-zinc-900/60 px-4 py-3 sm:px-5">
+            <h2 class="text-sm font-semibold text-white">Partidas recentes</h2>
+          </div>
+          <div id="matches" class="divide-y divide-zinc-800/70"></div>
+        </section>
+
+        <!-- SEASON HISTORY -->
+        <section class="h-fit overflow-hidden rounded-lg border border-zinc-800">
+          <div class="border-b border-zinc-800 bg-zinc-900/60 px-4 py-3">
+            <h2 class="text-sm font-semibold text-white">Histórico de seasons</h2>
+          </div>
+          <div class="grid grid-cols-[3rem_1fr_4rem_3.5rem] gap-2 border-b border-zinc-800 px-4 py-2 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+            <span>Season</span><span>ELO final</span><span class="text-right">Pico</span><span class="text-right">Top</span>
+          </div>
+          <div id="seasons" class="divide-y divide-zinc-800/70"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-zinc-800">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <img src="assets/portugalmcsrlogo.png" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
+        <span class="text-zinc-400">MCSR Portugal <span class="text-zinc-600">· Comunidade portuguesa de speedrun</span></span>
+      </a>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+        <span class="text-xs text-zinc-600">Dados via <a href="https://mcsrranked.com" target="_blank" rel="noopener" class="text-zinc-500 underline decoration-zinc-700 underline-offset-2 hover:text-zinc-300">MCSR Ranked API</a></span>
+        <div class="flex items-center gap-4">
+          <a href="https://www.twitch.tv/mcsr_portugal" target="_blank" rel="noopener" aria-label="Twitch"
+             class="text-zinc-500 transition-colors hover:text-white"><i class="bi bi-twitch text-lg"></i></a>
+          <a href="https://www.youtube.com/@MCSR-Portugal" target="_blank" rel="noopener" aria-label="YouTube"
+             class="text-zinc-500 transition-colors hover:text-white"><i class="bi bi-youtube text-lg"></i></a>
+          <a href="https://discord.com/invite/pG44r3G8ud" target="_blank" rel="noopener" aria-label="Discord"
+             class="text-zinc-500 transition-colors hover:text-white"><i class="bi bi-discord text-lg"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+const API = 'https://api.mcsrranked.com';
+const NICK = (new URLSearchParams(location.search).get('u') || '').trim();
+const RECENT = 20;
+
+// ── Rank tiers (same table as leaderboard.html) ────────────────────────────
+const RANKS = [
+  { name: 'Netherite',   min: 2000, color: '#c084fc' },
+  { name: 'Diamond III', min: 1800, color: '#7dd3fc' },
+  { name: 'Diamond II',  min: 1650, color: '#7dd3fc' },
+  { name: 'Diamond I',   min: 1500, color: '#7dd3fc' },
+  { name: 'Emerald III', min: 1400, color: '#34d399' },
+  { name: 'Emerald II',  min: 1300, color: '#34d399' },
+  { name: 'Emerald I',   min: 1200, color: '#34d399' },
+  { name: 'Gold III',    min: 1100, color: '#fbbf24' },
+  { name: 'Gold II',     min: 1000, color: '#fbbf24' },
+  { name: 'Gold I',      min:  900, color: '#fbbf24' },
+  { name: 'Iron III',    min:  800, color: '#d1d5db' },
+  { name: 'Iron II',     min:  700, color: '#d1d5db' },
+  { name: 'Iron I',      min:  600, color: '#d1d5db' },
+  { name: 'Coal III',    min:  500, color: '#9ca3af' },
+  { name: 'Coal II',     min:  400, color: '#9ca3af' },
+  { name: 'Coal I',      min:    0, color: '#9ca3af' },
+];
+
+function getRank(elo) {
+  if (elo == null) return null;
+  return RANKS.find(r => elo >= r.min) ?? RANKS[RANKS.length - 1];
+}
+
+function fmt(ms) {
+  if (ms == null) return null;
+  const s = Math.floor(ms / 1000);
+  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+}
+function esc(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+// Unix seconds → "há 3 dias"
+function ago(sec) {
+  const d = Date.now() / 1000 - sec;
+  if (d < 3600)    return `há ${Math.max(1, Math.floor(d / 60))} min`;
+  if (d < 86400)   return `há ${Math.floor(d / 3600)} h`;
+  if (d < 86400*30) { const n = Math.floor(d / 86400); return `há ${n} dia${n > 1 ? 's' : ''}`; }
+  const n = Math.floor(d / (86400*30));
+  return `há ${n} ${n > 1 ? 'meses' : 'mês'}`;
+}
+function hours(ms) { return `${Math.round(ms / 3_600_000)} h`; }
+function avatar(nick, size) {
+  const n = encodeURIComponent(nick);
+  return `<img src="https://mc-heads.net/avatar/${n}/${size}" onerror="this.onerror=null;this.src='https://minotar.net/helm/${n}/${size}'"
+               class="shrink-0 rounded-sm" style="width:${size}px;height:${size}px;image-rendering:pixelated" loading="lazy" alt=""/>`;
+}
+function countryTag(c) {
+  if (!c) return '';
+  return c === 'pt'
+    ? `<span class="rounded-sm border border-pt-green/50 px-1 text-[10px] font-semibold uppercase leading-4 text-emerald-400">pt</span>`
+    : `<span class="rounded-sm border border-zinc-800 px-1 text-[10px] font-medium uppercase leading-4 text-zinc-500">${esc(c)}</span>`;
+}
+function badge(rank) {
+  return rank
+    ? `<span class="inline-flex w-fit items-center rounded border px-2 py-0.5 text-[11px] font-medium" style="color:${rank.color};border-color:${rank.color}33;background:${rank.color}0d">${rank.name}</span>`
+    : '';
+}
+const profileUrl = nick => `jogador.html?u=${encodeURIComponent(nick)}`;
+
+async function get(path) {
+  const res  = await fetch(API + path);
+  const json = await res.json().catch(() => null);
+  if (json?.status !== 'success') {
+    const err = new Error(json?.data?.error || json?.data?.message || `HTTP ${res.status}`);
+    err.notFound = res.status === 400 || /not exist/i.test(err.message);
+    throw err;
+  }
+  return json.data;
+}
+
+// ── Header + stat cards ────────────────────────────────────────────────────
+function renderHeader(u) {
+  document.title = `${u.nickname} — MCSR Portugal`;
+  document.getElementById('crumb').textContent = u.nickname;
+  const av = document.getElementById('p-avatar');
+  av.onerror = () => { av.onerror = null; av.src = `https://minotar.net/helm/${encodeURIComponent(u.nickname)}/80`; };
+  av.src = `https://mc-heads.net/avatar/${encodeURIComponent(u.nickname)}/80`;
+  document.getElementById('p-nick').textContent = u.nickname;
+  document.getElementById('p-country').innerHTML = countryTag(u.country);
+
+  const rank = getRank(u.eloRate);
+  document.getElementById('p-badge').innerHTML = badge(rank);
+  const elo = document.getElementById('p-elo');
+  elo.textContent = u.eloRate != null ? `${u.eloRate} ELO` : 'Sem ELO esta season';
+  if (rank) elo.style.color = rank.color;
+  document.getElementById('p-rank').textContent = u.eloRank ? `#${u.eloRank} mundial` : '';
+  const last = u.timestamp?.lastRanked;
+  document.getElementById('p-last').textContent = last ? `Última partida ranked ${ago(last)}` : '';
+
+  const c = u.connections ?? {};
+  const linkCls = 'inline-flex items-center gap-1.5 rounded-md border border-zinc-800 px-2.5 py-1.5 text-xs text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white';
+  const links = [];
+  if (c.twitch)  links.push(`<a href="https://twitch.tv/${encodeURIComponent(c.twitch.id)}" target="_blank" rel="noopener" class="${linkCls}"><i class="bi bi-twitch"></i>${esc(c.twitch.name)}</a>`);
+  if (c.youtube) links.push(`<a href="https://youtube.com/channel/${encodeURIComponent(c.youtube.id)}" target="_blank" rel="noopener" class="${linkCls}"><i class="bi bi-youtube"></i>${esc(c.youtube.name)}</a>`);
+  if (c.discord) links.push(`<span class="${linkCls} cursor-default"><i class="bi bi-discord"></i>${esc(c.discord.name)}</span>`);
+  links.push(`<a href="https://mcsrranked.com/stats/${encodeURIComponent(u.nickname)}" target="_blank" rel="noopener" class="${linkCls}">MCSR Ranked<i class="bi bi-box-arrow-up-right text-[10px]"></i></a>`);
+  document.getElementById('p-links').innerHTML = links.join('');
+
+  // Stats path: data.statistics.season.<stat>.ranked
+  const s  = u.statistics?.season ?? {};
+  const r  = k => s[k]?.ranked ?? null;
+  const wins = r('wins'), loses = r('loses'), played = r('playedMatches');
+  const wr   = wins != null && played ? wins / played * 100 : null;
+  const avg  = r('completions') ? r('completionTime') / r('completions') : null;
+  const cards = [
+    ['Vitórias / Derrotas', wins != null ? `${wins}<span class="text-zinc-600"> / </span>${loses ?? 0}` : '—', `${played ?? 0} partidas`],
+    ['Win rate', wr != null ? `${wr.toFixed(1)}%` : '—', wr == null ? '' : wr >= 60 ? 'Consistente que fode' : wr >= 45 ? 'Equilibrado' : '💀'],
+    ['Melhor tempo', fmt(r('bestTime')) ?? '—', `${r('completions') ?? 0} runs completas`],
+    ['Average', fmt(avg) ?? '—', 'Das runs completas'],
+    ['Win streak', r('currentWinStreak') ?? '—', `Máximo: ${r('highestWinStreak') ?? '—'}`],
+    ['Forfeits', r('forfeits') ?? '—', played ? `${((r('forfeits') ?? 0) / played * 100).toFixed(0)}% das partidas` : ''],
+    ['Tempo de jogo', r('playtime') ? hours(r('playtime')) : '—', 'Em ranked esta season'],
+    ['Peak ELO', u.seasonResult?.highest ?? '—', u.seasonResult?.lowest != null ? `Mínimo: ${u.seasonResult.lowest}` : ''],
+  ];
+  document.getElementById('stats').innerHTML = cards.map(([label, value, sub]) => `
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900/30 p-4">
+      <div class="text-[11px] font-medium uppercase tracking-wider text-zinc-500">${label}</div>
+      <div class="mt-1.5 font-mono text-xl font-semibold tabular-nums text-white">${value}</div>
+      <div class="mt-0.5 text-xs text-zinc-500">${sub}</div>
+    </div>`).join('');
+}
+
+// ── Matches ────────────────────────────────────────────────────────────────
+// Reduce a raw match to what this page needs, from `me`'s point of view.
+// Note: changes[].eloRate is the ELO *before* the match.
+function toRow(m, me) {
+  const opp    = m.players.find(p => p.uuid !== me) ?? {};
+  const mine   = m.changes?.find(c => c.uuid === me);
+  const winner = m.result?.uuid;
+  const outcome = winner == null ? 'draw' : winner === me ? 'win' : 'loss';
+  return {
+    id: m.id, date: m.date, opp, outcome,
+    forfeited: m.forfeited,
+    time: m.result?.time ?? null,
+    timeIsMine: winner === me,
+    change: mine?.change ?? null,
+    eloAfter: mine?.eloRate != null && mine?.change != null ? mine.eloRate + mine.change : null,
+    seed: [m.seedType, m.bastionType].filter(Boolean).map(t => t.replaceAll('_', ' ').toLowerCase()).join(' · '),
+  };
+}
+
+const OUTCOME = {
+  win:  { label: 'V', cls: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
+  loss: { label: 'D', cls: 'bg-red-500/10 text-red-400 border-red-500/30' },
+  draw: { label: 'E', cls: 'bg-zinc-500/10 text-zinc-400 border-zinc-600/40' },
+};
+
+function renderMatches(rows) {
+  const el = document.getElementById('matches');
+  if (!rows.length) {
+    el.innerHTML = `<p class="px-5 py-10 text-center text-sm text-zinc-500">Sem partidas ranked esta season.</p>`;
+    return;
+  }
+  el.innerHTML = rows.slice(0, RECENT).map(r => {
+    const o = OUTCOME[r.outcome];
+    const note = r.outcome === 'draw' ? 'Empate'
+      : r.forfeited ? (r.outcome === 'win' ? 'Adversário desistiu' : 'Desistiu') : '';
+    // A forfeit's result.time is when it ended, not a completion
+    const time = !r.forfeited && r.time != null
+      ? `<span class="${r.timeIsMine ? 'text-zinc-200' : 'text-zinc-600'}" title="${r.timeIsMine ? 'Tempo da run' : 'Tempo do adversário'}">${fmt(r.time)}</span>`
+      : `<span class="text-zinc-600">—</span>`;
+    const ch = r.change == null ? '' :
+      `<span class="${r.change > 0 ? 'text-emerald-400' : r.change < 0 ? 'text-red-400' : 'text-zinc-500'}">${r.change > 0 ? '+' : ''}${r.change}</span>`;
+    return `
+    <div class="grid grid-cols-[1.75rem_1fr_3.5rem_2.5rem] items-center gap-3 px-4 py-2.5 text-sm even:bg-zinc-900/30 sm:grid-cols-[1.75rem_1fr_9rem_3.5rem_2.5rem_4.5rem] sm:px-5">
+      <span class="flex h-6 w-6 items-center justify-center rounded border font-mono text-xs font-semibold ${o.cls}">${o.label}</span>
+      <span class="flex min-w-0 items-center gap-2">
+        ${r.opp.nickname ? avatar(r.opp.nickname, 20) : ''}
+        ${r.opp.nickname
+          ? `<a href="${profileUrl(r.opp.nickname)}" class="truncate text-zinc-200 hover:text-white">${esc(r.opp.nickname)}</a>`
+          : `<span class="text-zinc-500">—</span>`}
+        ${countryTag(r.opp.country)}
+        ${r.opp.eloRate != null ? `<span class="hidden font-mono text-xs text-zinc-600 md:inline">${r.opp.eloRate}</span>` : ''}
+        ${note ? `<span class="hidden truncate text-xs text-zinc-500 sm:inline">· ${note}</span>` : ''}
+      </span>
+      <span class="hidden truncate text-xs capitalize text-zinc-500 sm:block">${esc(r.seed)}</span>
+      <span class="text-right font-mono tabular-nums">${time}</span>
+      <span class="text-right font-mono text-xs tabular-nums">${ch}</span>
+      <span class="hidden text-right text-xs text-zinc-500 sm:block">${ago(r.date)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── ELO chart (inline SVG, sized to the container) ─────────────────────────
+let chartPoints = [];
+
+function renderChart() {
+  const el = document.getElementById('chart');
+  const pts = chartPoints;
+  if (pts.length < 2) {
+    el.innerHTML = `<p class="py-12 text-center text-sm text-zinc-500">${pts.length ? 'Ainda poucas partidas para mostrar um gráfico.' : 'Sem partidas ranked esta season.'}</p>`;
+    document.getElementById('chart-range').textContent = '';
+    return;
+  }
+
+  const W = el.clientWidth - 16, H = 240;
+  const pad = { l: 40, r: 12, t: 12, b: 12 };
+  const elos = pts.map(p => p.elo);
+  let lo = Math.min(...elos), hi = Math.max(...elos);
+  const margin = Math.max(20, (hi - lo) * 0.1);
+  lo = Math.floor((lo - margin) / 10) * 10; hi = Math.ceil((hi + margin) / 10) * 10;
+  const x = i => pad.l + (W - pad.l - pad.r) * i / (pts.length - 1);
+  const y = e => pad.t + (H - pad.t - pad.b) * (1 - (e - lo) / (hi - lo));
+
+  // Tier boundaries inside the visible range
+  const tiers = RANKS.filter(r => r.min > lo && r.min < hi).map(r => `
+    <line x1="${pad.l}" x2="${W - pad.r}" y1="${y(r.min)}" y2="${y(r.min)}" stroke="${r.color}" stroke-opacity=".35" stroke-dasharray="4 4"/>
+    <text x="${W - pad.r}" y="${y(r.min) - 4}" text-anchor="end" font-size="10" fill="${r.color}" fill-opacity=".7">${r.name}</text>`).join('');
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.elo).toFixed(1)}`).join('');
+  const area = `${line}L${x(pts.length - 1)},${H - pad.b}L${x(0)},${H - pad.b}Z`;
+  const color = getRank(elos[elos.length - 1])?.color ?? '#fff';
+
+  el.innerHTML = `
+    <svg width="${W}" height="${H}" class="block touch-none select-none" style="margin:0 auto">
+      <defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" stop-color="${color}" stop-opacity=".18"/><stop offset="1" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient></defs>
+      <text x="${pad.l - 6}" y="${y(hi) + 4}" text-anchor="end" font-size="10" fill="#71717a" font-family="JetBrains Mono">${hi}</text>
+      <text x="${pad.l - 6}" y="${y(lo)}" text-anchor="end" font-size="10" fill="#71717a" font-family="JetBrains Mono">${lo}</text>
+      ${tiers}
+      <path d="${area}" fill="url(#fill)"/>
+      <path d="${line}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+      <line id="cursor" y1="${pad.t}" y2="${H - pad.b}" stroke="#52525b" visibility="hidden"/>
+      <circle id="dot" r="4" fill="${color}" stroke="#09090b" stroke-width="2" visibility="hidden"/>
+    </svg>
+    <div id="tip" hidden class="pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs shadow-lg"></div>`;
+
+  document.getElementById('chart-range').textContent = `${elos[0]} → ${elos[elos.length - 1]}`;
+
+  const svg = el.querySelector('svg'), tip = el.querySelector('#tip');
+  const cursor = el.querySelector('#cursor'), dot = el.querySelector('#dot');
+  const hide = () => { tip.hidden = true; cursor.setAttribute('visibility', 'hidden'); dot.setAttribute('visibility', 'hidden'); };
+  svg.addEventListener('pointerleave', hide);
+  svg.addEventListener('pointermove', e => {
+    const bx = e.clientX - svg.getBoundingClientRect().left;
+    const i = Math.round((bx - pad.l) / (W - pad.l - pad.r) * (pts.length - 1));
+    if (i < 0 || i >= pts.length) return hide();
+    const p = pts[i], px = x(i), py = y(p.elo);
+    cursor.setAttribute('x1', px); cursor.setAttribute('x2', px); cursor.setAttribute('visibility', 'visible');
+    dot.setAttribute('cx', px); dot.setAttribute('cy', py); dot.setAttribute('visibility', 'visible');
+    const res = { win: '<span class="text-emerald-400">Vitória</span>', loss: '<span class="text-red-400">Derrota</span>', draw: 'Empate' }[p.outcome];
+    tip.innerHTML = `<div class="font-mono font-semibold text-white">${p.elo} <span class="${p.change >= 0 ? 'text-emerald-400' : 'text-red-400'}">(${p.change >= 0 ? '+' : ''}${p.change})</span></div>
+      <div class="text-zinc-400">${res} vs ${esc(p.opp ?? '?')}</div>`;
+    tip.hidden = false;
+    const left = svg.offsetLeft + px;
+    tip.style.left = `${Math.min(Math.max(left - tip.offsetWidth / 2, 0), el.clientWidth - tip.offsetWidth)}px`;
+    tip.style.top  = `${Math.max(py - tip.offsetHeight - 6, 0) + 16}px`;
+  });
+}
+
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderChart, 150); });
+
+// ── Season history ─────────────────────────────────────────────────────────
+function renderSeasons(results) {
+  const rows = Object.entries(results ?? {})
+    .map(([n, s]) => ({ n: +n, ...s }))
+    .filter(s => s.last?.eloRate != null)
+    .sort((a, b) => b.n - a.n);
+  document.getElementById('seasons').innerHTML = rows.length ? rows.map(s => {
+    const rank = getRank(s.last.eloRate);
+    return `
+    <div class="grid grid-cols-[3rem_1fr_4rem_3.5rem] items-center gap-2 px-4 py-2 text-sm even:bg-zinc-900/30">
+      <span class="font-mono text-zinc-400">S${s.n}</span>
+      <span class="flex items-center gap-2 font-mono tabular-nums" title="${rank.name}">
+        <span class="h-2 w-2 rounded-full" style="background:${rank.color}"></span>
+        <span style="color:${rank.color}">${s.last.eloRate}</span>
+        ${s.last.eloRank ? `<span class="text-xs text-zinc-600">#${s.last.eloRank}</span>` : ''}
+      </span>
+      <span class="text-right font-mono tabular-nums text-zinc-400">${s.highest ?? '—'}</span>
+      <span class="text-right font-mono text-xs tabular-nums text-zinc-500">${s.last.percentile != null ? `${s.last.percentile}%` : '—'}</span>
+    </div>`;
+  }).join('') : `<p class="px-4 py-6 text-center text-xs text-zinc-500">Sem seasons registadas.</p>`;
+}
+
+// ── Main ───────────────────────────────────────────────────────────────────
+function showError(title, msg) {
+  document.getElementById('skeleton').hidden = true;
+  document.getElementById('error-title').textContent = title;
+  document.getElementById('error-msg').textContent = msg;
+  document.getElementById('error').hidden = false;
+  document.querySelector('#search input').focus();
+}
+
+document.getElementById('search').addEventListener('submit', e => {
+  e.preventDefault();
+  location.href = profileUrl(e.target.u.value.trim());
+});
+
+async function main() {
+  if (!NICK) return showError('Procurar jogador', 'Escreve o nickname de um jogador do MCSR Ranked.');
+  try {
+    const [user, matches, seasons] = await Promise.all([
+      get(`/users/${encodeURIComponent(NICK)}`),
+      get(`/users/${encodeURIComponent(NICK)}/matches?type=2&count=100`).catch(() => []),
+      get(`/users/${encodeURIComponent(NICK)}/seasons`).catch(() => null),
+    ]);
+
+    renderHeader(user);
+    const rows = matches.map(m => toRow(m, user.uuid));
+    // The API caps a page at 100 matches, so long seasons only show the latest ones
+    document.getElementById('chart-season').textContent =
+      (matches[0]?.season ? `· Season ${matches[0].season}` : '') + (matches.length >= 100 ? ' · últimas 100 partidas' : '');
+
+    document.getElementById('skeleton').hidden = true;
+    document.getElementById('profile').hidden = false;
+
+    // Matches come newest first; the chart reads oldest → newest
+    chartPoints = rows.filter(r => r.eloAfter != null).reverse()
+      .map(r => ({ elo: r.eloAfter, change: r.change, outcome: r.outcome, opp: r.opp.nickname }));
+    renderChart();
+    renderMatches(rows);
+    renderSeasons(seasons?.seasonResults);
+  } catch (e) {
+    console.error(e);
+    if (e.notFound) showError('Jogador não encontrado', `Não existe nenhum jogador "${NICK}" no MCSR Ranked.`);
+    else showError('Erro ao carregar', e.message);
+  }
+}
+
+main();
+</script>
+</body>
+</html>
