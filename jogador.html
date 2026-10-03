@@ -292,7 +292,7 @@ function renderHeader(u) {
   const s  = u.statistics?.season ?? {};
   const r  = k => s[k]?.ranked ?? null;
   const wins = r('wins'), loses = r('loses'), played = r('playedMatches');
-  const wr   = wins != null && played ? wins / played * 100 : null;
+  const wr   = wins != null && played ? wins / (wins + loses) * 100 : null;
   const avg  = r('completions') ? r('completionTime') / r('completions') : null;
   const cards = [
     ['Vitórias / Derrotas', wins != null ? `${wins}<span class="text-zinc-600"> / </span>${loses ?? 0}` : '—', `${played ?? 0} partidas`],
