@@ -27,7 +27,7 @@ const TORNEIOS = [
   {
     name:        'Tugão',
     edition:     '1ª Edição',
-    status:      'a-decorrer',
+    status:      'terminado',
     date:        null,
     description: 'Playoffs Português',
     details: [
@@ -38,5 +38,6 @@ const TORNEIOS = [
       { label: 'Bracket', url: 'https://challonge.com/pt/s0ftaal6' },
       { label: 'Mais info no Discord', url: 'https://discord.gg/C6WZs4Eq3n', icon: 'discord' },
     ],
+    podium: ['LeitePaterno', 'Paroxysm', 'Koala488'],
   },
 ];
