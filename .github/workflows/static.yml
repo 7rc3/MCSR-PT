@@ -38,19 +38,10 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Build CSS
-        # Tailwind CLI → assets/styles.css (minified), from tailwind.config.js
-        run: npm run build
-      - name: Assemble site
-        # Copy the repo into _site, minus build tooling and repo-only files
-        run: |
-          rm -rf _site && mkdir _site
-          tar -cf - \
-            --exclude=./.git --exclude=./.github --exclude=./.gitignore --exclude=./node_modules \
-            --exclude=./_site --exclude=./src --exclude=./package.json --exclude=./package-lock.json \
-            --exclude=./tailwind.config.js --exclude=./CLAUDE.md \
-            . | tar -xf - -C _site
-          test -s _site/assets/styles.css
+      - name: Build site
+        # Tailwind CLI → assets/styles.css, then copy the deployable files into _site
+        # (same script Vercel runs, see vercel.json)
+        run: npm run site
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
