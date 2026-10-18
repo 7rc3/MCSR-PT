@@ -31,13 +31,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build CSS
+        # Tailwind CLI → assets/styles.css (minified), from tailwind.config.js
+        run: npm run build
+      - name: Assemble site
+        # Copy the repo into _site, minus build tooling and repo-only files
+        run: |
+          rm -rf _site && mkdir _site
+          tar -cf - \
+            --exclude=./.git --exclude=./.github --exclude=./.gitignore --exclude=./node_modules \
+            --exclude=./_site --exclude=./src --exclude=./package.json --exclude=./package-lock.json \
+            --exclude=./tailwind.config.js --exclude=./CLAUDE.md \
+            . | tar -xf - -C _site
+          test -s _site/assets/styles.css
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          path: '_site'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

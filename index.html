@@ -1,28 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MCSR Portugal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>MCSR Portugal — Minecraft Speedrun Portugal | Comunidade Portuguesa</title>
+  <meta name="description" content="MCSR Portugal é a comunidade portuguesa de speedrun de Minecraft: leaderboard ELO do MCSR Ranked, torneios, tutoriais em português, streams e Discord." />
+  <link rel="canonical" href="https://www.mcsrpt.org/" />
+  <meta property="og:site_name" content="MCSR Portugal" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_PT" />
+  <meta property="og:title" content="MCSR Portugal — Minecraft Speedrun Portugal | Comunidade Portuguesa" />
+  <meta property="og:description" content="MCSR Portugal é a comunidade portuguesa de speedrun de Minecraft: leaderboard ELO do MCSR Ranked, torneios, tutoriais em português, streams e Discord." />
+  <meta property="og:url" content="https://www.mcsrpt.org/" />
+  <meta property="og:image" content="https://www.mcsrpt.org/assets/portugalmcsrlogo.png" />
+  <meta property="og:image:width" content="757" />
+  <meta property="og:image:height" content="755" />
+  <meta property="og:image:alt" content="Logótipo da MCSR Portugal" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#09090b" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-          },
-          colors: {
-            pt: { red: '#da291c', green: '#046a38' },
-          },
-        },
+  <link href="assets/styles.css" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.mcsrpt.org/#organization",
+        "name": "MCSR Portugal",
+        "alternateName": ["Minecraft Speedrun Portugal", "Minecraft Speedrunning Portugal"],
+        "url": "https://www.mcsrpt.org/",
+        "logo": "https://www.mcsrpt.org/assets/portugalmcsrlogo.png",
+        "description": "Comunidade portuguesa de speedrun de Minecraft.",
+        "sameAs": [
+          "https://www.twitch.tv/mcsr_portugal",
+          "https://www.youtube.com/@MCSR-Portugal",
+          "https://discord.gg/C6WZs4Eq3n"
+        ]
       },
-    }
+      {
+        "@type": "WebSite",
+        "@id": "https://www.mcsrpt.org/#website",
+        "name": "MCSR Portugal",
+        "alternateName": "Minecraft Speedrun Portugal",
+        "url": "https://www.mcsrpt.org/",
+        "inLanguage": "pt-PT",
+        "publisher": { "@id": "https://www.mcsrpt.org/#organization" }
+      }
+    ]
+  }
   </script>
 </head>
 <body class="bg-zinc-950 text-zinc-300 font-sans antialiased min-h-screen">
@@ -37,7 +69,7 @@
   <header class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur">
     <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
       <a href="#" class="flex items-center gap-2.5">
-        <img src="assets/portugalmcsrlogo.png" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
+        <img src="assets/logo-64.png" width="28" height="28" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
         <span class="text-sm font-semibold tracking-tight text-white">MCSR Portugal</span>
       </a>
       <div class="flex items-center gap-1 sm:gap-2">
@@ -198,6 +230,40 @@
       </div>
     </section>
 
+    <!-- ABOUT -->
+    <section id="sobre" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-20 sm:px-6">
+      <div class="grid gap-6 md:grid-cols-[16rem_1fr] md:gap-10">
+        <div>
+          <h2 class="text-xl font-semibold tracking-tight text-white">Sobre a MCSR Portugal</h2>
+          <p class="mt-1 text-sm text-zinc-500">Minecraft Speedrun em Portugal.</p>
+        </div>
+        <div class="max-w-2xl space-y-4 text-sm leading-7 text-zinc-400 sm:text-base sm:leading-7">
+          <p>
+            A MCSR Portugal é a comunidade portuguesa de speedrun de Minecraft. Junta speedrunners portugueses
+            de todos os níveis, de quem está a fazer a primeira run a quem já luta pelo topo do ranking, para
+            treinar, trocar estratégias e jogar uns contra os outros. MCSR quer dizer Minecraft Speedrunning:
+            o objetivo é derrotar o Ender Dragon o mais depressa possível.
+          </p>
+          <p>
+            Grande parte da comunidade joga <a href="https://mcsrranked.com" target="_blank" rel="noopener" class="text-zinc-200 underline decoration-zinc-700 underline-offset-2 hover:text-white">MCSR Ranked</a>,
+            onde dois jogadores fazem a mesma seed ao mesmo tempo e cada partida mexe no ELO. Na
+            <a href="leaderboard.html" class="text-zinc-200 underline decoration-zinc-700 underline-offset-2 hover:text-white">leaderboard</a>
+            encontras todos os jogadores portugueses ordenados por ELO, com o perfil, as partidas recentes e os
+            splits de cada um. Também organizamos <a href="torneios.html" class="text-zinc-200 underline decoration-zinc-700 underline-offset-2 hover:text-white">torneios</a>
+            da comunidade e estamos a preparar tutoriais em português para quem quer começar ou baixar os tempos.
+          </p>
+          <p>
+            Os torneios passam em direto no nosso canal da
+            <a href="https://www.twitch.tv/mcsr_portugal" target="_blank" rel="noopener" class="text-zinc-200 underline decoration-zinc-700 underline-offset-2 hover:text-white">Twitch</a>
+            e ficam guardados no <a href="https://www.youtube.com/@MCSR-Portugal" target="_blank" rel="noopener" class="text-zinc-200 underline decoration-zinc-700 underline-offset-2 hover:text-white">YouTube</a>,
+            e na <a href="tvmcsrpt.html" class="text-zinc-200 underline decoration-zinc-700 underline-offset-2 hover:text-white">MCSR TV</a>
+            podes ver as partidas ranked dos portugueses que estão a jogar agora. Para conversar, tirar dúvidas
+            ou encontrar alguém para treinar, entra no nosso Discord.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- DISCORD CTA -->
     <section id="discord" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-24 sm:px-6">
       <div class="relative overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/40">
@@ -226,7 +292,7 @@
   <footer class="border-t border-zinc-800">
     <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <div class="flex items-center gap-2.5">
-        <img src="assets/portugalmcsrlogo.png" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
+        <img src="assets/logo-64.png" width="24" height="24" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
         <span class="text-zinc-400">MCSR Portugal <span class="text-zinc-600">· Comunidade portuguesa de speedrun</span></span>
       </div>
       <div class="flex items-center gap-4">
@@ -276,7 +342,7 @@
          class="${COLS} group text-sm transition-colors even:bg-zinc-900/30 hover:bg-zinc-900">
         <span class="font-mono font-semibold tabular-nums ${rankCls}">${i + 1}</span>
         <span class="flex min-w-0 items-center gap-3">
-          <img src="${av}" class="h-6 w-6 rounded-sm" style="image-rendering:pixelated" onerror="this.onerror=null;this.src='${fbAv}'" alt=""/>
+          <img src="${av}" width="24" height="24" class="h-6 w-6 rounded-sm" style="image-rendering:pixelated" onerror="this.onerror=null;this.src='${fbAv}'" alt=""/>
           <span class="truncate font-medium text-zinc-100 group-hover:text-white">${esc(p.nickname)}</span>
         </span>
         <span class="text-right font-mono font-semibold tabular-nums text-white">${p.eloRate ?? '—'}</span>
