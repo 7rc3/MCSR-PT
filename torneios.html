@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Torneios — MCSR Portugal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Torneios de Minecraft Speedrun em Portugal — MCSR Portugal</title>
+  <meta name="description" content="Torneios de speedrun de Minecraft da comunidade portuguesa: próximos eventos, resultados, pódios e brackets dos torneios organizados pela MCSR Portugal." />
+  <link rel="canonical" href="https://www.mcsrpt.org/torneios.html" />
+  <meta property="og:site_name" content="MCSR Portugal" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_PT" />
+  <meta property="og:title" content="Torneios de Minecraft Speedrun em Portugal — MCSR Portugal" />
+  <meta property="og:description" content="Torneios de speedrun de Minecraft da comunidade portuguesa: próximos eventos, resultados, pódios e brackets dos torneios organizados pela MCSR Portugal." />
+  <meta property="og:url" content="https://www.mcsrpt.org/torneios.html" />
+  <meta property="og:image" content="https://www.mcsrpt.org/assets/portugalmcsrlogo.png" />
+  <meta property="og:image:width" content="757" />
+  <meta property="og:image:height" content="755" />
+  <meta property="og:image:alt" content="Logótipo da MCSR Portugal" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#09090b" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-          },
-          colors: {
-            pt: { red: '#da291c', green: '#046a38' },
-          },
-        },
-      },
-    }
-  </script>
-  <!-- Event data lives here — edit this file to add or update tournaments -->
-  <script src="assets/torneios.js"></script>
+  <link href="assets/styles.css" rel="stylesheet" />
 </head>
 <body class="bg-zinc-950 text-zinc-300 font-sans antialiased min-h-screen">
 
@@ -40,7 +40,7 @@
     <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
       <div class="flex min-w-0 items-center gap-3">
         <a href="index.html" class="flex items-center gap-2.5">
-          <img src="assets/portugalmcsrlogo.png" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
+          <img src="assets/logo-64.png" width="28" height="28" alt="MCSR Portugal" class="h-7 w-7" style="image-rendering:pixelated" />
           <span class="hidden text-sm font-semibold tracking-tight text-white sm:inline">MCSR Portugal</span>
         </a>
         <span class="text-zinc-700">/</span>
@@ -90,7 +90,7 @@
   <footer class="border-t border-zinc-800">
     <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <a href="index.html" class="flex items-center gap-2.5">
-        <img src="assets/portugalmcsrlogo.png" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
+        <img src="assets/logo-64.png" width="24" height="24" alt="" class="h-6 w-6" style="image-rendering:pixelated" />
         <span class="text-zinc-400">MCSR Portugal <span class="text-zinc-600">· Comunidade portuguesa de speedrun</span></span>
       </a>
       <div class="flex items-center gap-4">
@@ -104,6 +104,10 @@
     </div>
   </footer>
 
+<!-- Event data lives here — edit this file to add or update tournaments.
+     Loaded at the end of <body> (not in <head>) so it doesn't block the first paint; it must stay
+     before the inline script below, which reads TORNEIOS synchronously. -->
+<script src="assets/torneios.js"></script>
 <script>
 // Renders the TORNEIOS list from assets/torneios.js. To add events, edit that file, not this one.
 
@@ -137,7 +141,7 @@ function renderEvent(ev, section) {
         ${ev.podium.map((nick, i) => `
           <li class="flex items-center gap-3 px-3 py-2 text-sm">
             <span class="w-4 font-mono font-semibold ${podiumCls[i] ?? 'text-zinc-500'}">${i + 1}</span>
-            <img src="https://mc-heads.net/avatar/${encodeURIComponent(nick)}/20" class="h-5 w-5 rounded-sm" style="image-rendering:pixelated" alt=""/>
+            <img src="https://mc-heads.net/avatar/${encodeURIComponent(nick)}/20" width="20" height="20" class="h-5 w-5 rounded-sm" style="image-rendering:pixelated" alt=""/>
             <span class="truncate font-medium text-zinc-100">${esc(nick)}</span>
           </li>`).join('')}
       </ol>

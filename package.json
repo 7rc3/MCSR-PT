@@ -1,0 +1,13 @@
+{
+  "name": "mcsr-pt",
+  "private": true,
+  "description": "Site da comunidade MCSR Portugal (mcsrpt.org)",
+  "scripts": {
+    "build": "tailwindcss -i src/tailwind.css -o assets/styles.css --minify",
+    "site": "sh scripts/build-site.sh",
+    "watch": "tailwindcss -i src/tailwind.css -o assets/styles.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Indexable pages only. jogador.html (one template for every ?u= profile) and the noindex
+     pages (404, splits overlay, TV test redirect, /discord) are left out on purpose. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.mcsrpt.org/</loc></url>
+  <url><loc>https://www.mcsrpt.org/leaderboard.html</loc></url>
+  <url><loc>https://www.mcsrpt.org/torneios.html</loc></url>
+  <url><loc>https://www.mcsrpt.org/tvmcsrpt.html</loc></url>
+</urlset>
